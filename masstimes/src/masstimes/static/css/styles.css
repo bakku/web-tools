@@ -1,0 +1,4 @@
+/* pico css overrides */
+body > header {
+    padding: 0;
+}

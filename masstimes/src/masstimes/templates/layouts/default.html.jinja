@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kreuzberg / St.Paul - Schwandorf - Heilige Messe</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/pico.violet.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+    <header>
+        <nav class="container">
+          <ul>
+            <li><strong>⛪ Heilige Messe</strong></li>
+          </ul>
+          <ul>
+            <li><a href="#">About</a></li>
+          </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>
