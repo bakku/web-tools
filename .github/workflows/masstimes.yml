@@ -6,6 +6,7 @@ on:
       - "**"
     paths:
       - "masstimes/**"
+      - ".github/workflows/masstimes.yml"
 
 defaults:
   run:
