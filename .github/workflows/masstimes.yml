@@ -2,7 +2,10 @@ name: Masstimes
 
 on:
   push:
-    branches: ["**"]
+    branches:
+      - "**"
+    paths:
+      - "masstimes/**"
 
 defaults:
   run:
