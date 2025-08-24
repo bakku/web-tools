@@ -1,8 +1,12 @@
-name: CI
+name: Masstimes
 
 on:
   push:
     branches: ["**"]
+
+defaults:
+  run:
+    working-directory: ./masstimes
 
 jobs:
   check:
