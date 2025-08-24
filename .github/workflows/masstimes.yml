@@ -2,7 +2,11 @@ name: Masstimes
 
 on:
   push:
-    branches: ["**"]
+    branches:
+      - "**"
+    paths:
+      - "masstimes/**"
+      - ".github/workflows/masstimes.yml"
 
 defaults:
   run:
