@@ -10,12 +10,12 @@ def add_portfolio(portfolio: Portfolio) -> None:
     portfolios.append(portfolio)
 
 
-def get_portfolio(portfolio_id: UUID4) -> Portfolio:
+def get_portfolio(portfolio_id: UUID4) -> Portfolio | None:
     for portfolio in portfolios:
         if portfolio.id == portfolio_id:
             return portfolio
 
-    raise ValueError(f"Portfolio with id {portfolio_id} not found")
+    return None
 
 
 def update_portfolio(portfolio: Portfolio) -> None:

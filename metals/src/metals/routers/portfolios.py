@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import UUID4
 
@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.post("/p/")
-async def create() -> RedirectResponse:
+async def portfolios_create() -> RedirectResponse:
     portfolio = Portfolio(id=uuid.uuid4(), holdings=[])
 
     add_portfolio(portfolio)
@@ -21,8 +21,11 @@ async def create() -> RedirectResponse:
 
 
 @router.get("/p/{_id}")
-async def show(_id: UUID4, request: Request) -> HTMLResponse:
+async def portfolios_show(_id: UUID4, request: Request) -> HTMLResponse:
     portfolio = get_portfolio(_id)
+
+    if portfolio is None:
+        raise HTTPException(status_code=404)
 
     return templates.TemplateResponse(
         "portfolios/show.html.jinja2", {"portfolio": portfolio, "request": request}

@@ -1,0 +1,28 @@
+{% extends "layout.html.jinja2" %}
+
+{% block title %}Add Holding{% endblock %}
+
+{% block content %}
+    <section>
+        <h3>Add Holding</h3>
+        <form action="{{ url_for("holdings_create", portfolio_id=portfolio_id) }}" method="post">
+            <input type="hidden" name="portfolio_id" value="{{ portfolio_id }}">
+            <label for="metal">Metal</label>
+            <select name="metal" id="metal" required>
+                <option value="Silver">Silver</option>
+                <option value="Gold">Gold</option>
+            </select>
+            <label for="quantity">Quantity (oz)</label>
+            <input type="number" name="quantity" id="quantity" step="0.01" required>
+            <label for="purchase_price">Purchase Price per Ounce</label>
+            <input type="number" name="purchase_price" id="purchase_price" step="0.01" required>
+            <label for="currency">Currency</label>
+            <select name="currency" id="currency" required>
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+                <option value="EUR">EUR</option>
+            </select>
+            <button type="submit">Add Holding</button>
+        </form>
+    </section>
+{% endblock %}

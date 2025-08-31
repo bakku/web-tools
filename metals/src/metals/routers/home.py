@@ -7,5 +7,5 @@ router = APIRouter()
 
 
 @router.get("/")
-async def index(request: Request) -> HTMLResponse:
+async def home_index(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("home/index.html.jinja2", {"request": request})

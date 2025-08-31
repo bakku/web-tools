@@ -5,6 +5,9 @@
 {% block content %}
     <section>
         <h3>Your portfolio</h3>
+    </section>
+
+    <section>
         <table class="striped">
             <thead>
             <tr>
@@ -46,4 +49,7 @@
             </tfoot>
         </table>
     </section>
+
+    <!-- TOOD: Make it full size in case the screen is small. Make sure it aligns to pico css breakpoints -->
+    <a role="button" href="{{ url_for("holdings_new", portfolio_id=portfolio.id) }}" class="secondary">Add</a>
 {% endblock %}
