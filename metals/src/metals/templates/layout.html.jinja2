@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | Metals</title>
+    <link rel="stylesheet" href="{{ url_for("static", path="/css/pico.zinc.min.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", path="/css/custom.css") }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+<header>
+    <div class="container">
+        <nav>
+            <ul>
+                <li class="brand"><a href="/">Metals</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

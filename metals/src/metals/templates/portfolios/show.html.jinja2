@@ -1,0 +1,49 @@
+{% extends "layout.html.jinja2" %}
+
+{% block title %}Your portfolio{% endblock %}
+
+{% block content %}
+    <section>
+        <h3>Your portfolio</h3>
+        <table class="striped">
+            <thead>
+            <tr>
+                <th>Metal</th>
+                <th>Quantity (oz)</th>
+                <th>Purchase Price per Ounce ($)</th>
+                <th>Current Value ($)</th>
+                <th>Gain (%)</th>
+                <th>Absolute Gain ($)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Silver</td>
+                <td>10</td>
+                <td>$20.00</td>
+                <td>$250.00</td>
+                <td>+25%</td>
+                <td>+$50.00</td>
+            </tr>
+            <tr>
+                <td>Gold</td>
+                <td>5</td>
+                <td>$1800.00</td>
+                <td>$10000.00</td>
+                <td>+11.1%</td>
+                <td>+$1000.00</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="total-row">
+                <th><strong>Total</strong></th>
+                <th></th>
+                <th></th>
+                <th><strong>$10250.00</strong></th>
+                <th><strong>+11.4%</strong></th>
+                <th><strong>+$1050.00</strong></th>
+            </tr>
+            </tfoot>
+        </table>
+    </section>
+{% endblock %}
