@@ -5,11 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metals Portfolio</title>
     <link rel="stylesheet" href="/static/css/pico.zinc.min.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
 </head>
 <body>
     <main class="container">
-        <h1>Metals Portfolio</h1>
+        <h1>Metals</h1>
         <p>Welcome to your precious metals tracker.</p>
+
+        <section>
+            <h3>Current Metal Prices</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metal</th>
+                        <th>Price per Ounce ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Silver</td>
+                        <td>$25.00</td>
+                    </tr>
+                    <tr>
+                        <td>Gold</td>
+                        <td>$2000.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h3>Your Holdings</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metal</th>
+                        <th>Quantity (oz)</th>
+                        <th>Purchase Price per Ounce ($)</th>
+                        <th>Current Value ($)</th>
+                        <th>Gain (%)</th>
+                        <th>Absolute Gain ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Silver</td>
+                        <td>10</td>
+                        <td>$20.00</td>
+                        <td>$250.00</td>
+                        <td>+25%</td>
+                        <td>+$50.00</td>
+                    </tr>
+                    <tr>
+                        <td>Gold</td>
+                        <td>5</td>
+                        <td>$1800.00</td>
+                        <td>$10000.00</td>
+                        <td>+11.1%</td>
+                        <td>+$1000.00</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>Total</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>$10250.00</strong></td>
+                        <td><strong>+11.4%</strong></td>
+                        <td><strong>+$1050.00</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </main>
 </body>
 </html>
