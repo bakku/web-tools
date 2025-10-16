@@ -64,5 +64,7 @@
         {% endif %}
     </section>
 
-    <a role="button" href="{{ url_for("holdings_new", portfolio_id=portfolio_id) }}">Add</a>
+    <section>
+        <a role="button" href="{{ url_for("holdings_new", portfolio_id=portfolio_id) }}">Add</a>
+    </section>
 {% endblock %}

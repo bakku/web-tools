@@ -50,3 +50,8 @@ header .brand {
 .table-wrapper {
     overflow-x: auto;
 }
+
+section [role="button"] {
+    display: block;
+    width: 100%;
+}
