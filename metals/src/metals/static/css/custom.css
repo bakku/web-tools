@@ -50,3 +50,7 @@ header .brand {
 .table-wrapper {
     overflow-x: auto;
 }
+
+.w-100 {
+    width: 100%;
+}

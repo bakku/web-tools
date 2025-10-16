@@ -17,7 +17,7 @@
             <label for="purchase_price">Purchase Price per Ounce (€)</label>
             <input type="number" name="purchase_price" id="purchase_price" step="0.01" required>
             <button type="submit">Add Holding</button>
-            <a role="button" href="{{ url_for("portfolios_show", _id=portfolio_id) }}" class="secondary" style="width: 100%;">Cancel</a>
+            <a role="button" href="{{ url_for("portfolios_show", _id=portfolio_id) }}" class="secondary w-100">Cancel</a>
         </form>
     </section>
 {% endblock %}
