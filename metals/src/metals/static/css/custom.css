@@ -51,7 +51,6 @@ header .brand {
     overflow-x: auto;
 }
 
-section [role="button"] {
-    display: block;
+.w-100 {
     width: 100%;
 }
