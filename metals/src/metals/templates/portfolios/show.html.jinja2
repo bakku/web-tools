@@ -1,0 +1,69 @@
+{% extends "layout.html.jinja2" %}
+
+{% block title %}Your portfolio{% endblock %}
+
+{% block content %}
+    <section>
+        <h3>Your portfolio</h3>
+    </section>
+
+    <section>
+        {% if data.holdings %}
+            <div class="table-wrapper">
+                <table class="striped">
+                    <thead>
+                    <tr>
+                        <th>Metal</th>
+                        <th>Quantity (oz)</th>
+                        <th>Purchase Price per Ounce</th>
+                        <th>Current Value</th>
+                        <th>Gain (%)</th>
+                        <th>Absolute Gain</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for holding in data.holdings %}
+                        <tr>
+                            <td>{{ holding.metal }}</td>
+                            <td>{{ "%.2f"|format(holding.quantity) }}</td>
+                            <td>{{ "%.2f"|format(holding.purchase_price) }} €</td>
+                            <td>{{ "%.2f"|format(holding.current_value) }} €</td>
+                            <td>
+                                {{ "+" if holding.gain_percent >= 0 else "" }}{{ "%.2f"|format(holding.gain_percent) }}%
+                            </td>
+                            <td>
+                                {{ "+" if holding.absolute_gain >= 0 else "" }}{{ "%.2f"|format(holding.absolute_gain) }}
+                                €
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr class="total-row">
+                        <th><strong>Total</strong></th>
+                        <th></th>
+                        <th></th>
+                        <th><strong>{{ "%.2f"|format(data.total_current_value) }} €</strong></th>
+                        <th>
+                            <strong>
+                                {{ "+" if data.total_gain_percent >= 0 else "" }}{{ "%.2f"|format(data.total_gain_percent) }}%
+                            </strong>
+                        </th>
+                        <th>
+                            <strong>
+                                {{ "+" if data.total_absolute_gain >= 0 else "" }}{{ "%.2f"|format(data.total_absolute_gain) }}
+                                €
+                            </strong>
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        {% else %}
+            <p>No holdings yet. Add your first holding to get started!</p>
+        {% endif %}
+    </section>
+
+    <!-- TODO: Make it full size in case the screen is small. Make sure it aligns to pico css breakpoints -->
+    <a role="button" href="{{ url_for("holdings_new", portfolio_id=portfolio_id) }}" class="secondary">Add</a>
+{% endblock %}

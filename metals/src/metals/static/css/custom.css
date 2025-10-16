@@ -1,0 +1,52 @@
+:root {
+    @media (prefers-color-scheme: light) {
+        --pico-header-background: rgba(255, 255, 255, .8);
+        --pico-header-border-color: #eff1f4;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        --pico-header-background: rgba(19, 22.5, 30.5, .9);
+        --pico-header-border-color: rgba(32, 38, 50, .9);
+    }
+}
+
+header {
+    padding-block: 0 !important;
+    z-index: 2;
+    position: sticky;
+    top: 0;
+    background-color: var(--pico-header-background);
+    border-bottom: var(--pico-border-width) solid var(--pico-header-border-color);
+    margin-bottom: var(--pico-block-spacing-vertical);
+}
+
+header .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.hero {
+    width: 100%;
+    margin-top: 10rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 3rem;
+}
+
+.hero-actions {
+    margin-top: 2rem;
+}
+
+.highlight {
+    background: linear-gradient(to right, rgb(215.4, 140.8, 210.2), rgb(184.5, 153, 237.75), rgb(156.6, 165.3, 232.6), rgb(142.75, 168.95, 240.05));
+    color: transparent;
+    background-clip: text;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}

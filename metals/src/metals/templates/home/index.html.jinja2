@@ -1,0 +1,14 @@
+{% extends "layout.html.jinja2" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <h1 class="highlight">Precious Metals Tracker</h1>
+        <p>Track your precious metal portfolio and see how its value grows.</p>
+
+        <form action="/p" method="post" class="hero-actions">
+            <button>Start now</button>
+        </form>
+    </section>
+{% endblock %}
