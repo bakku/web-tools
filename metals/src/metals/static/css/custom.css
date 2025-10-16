@@ -46,3 +46,7 @@ header .brand {
     color: transparent;
     background-clip: text;
 }
+
+.table-wrapper {
+    overflow-x: auto;
+}
