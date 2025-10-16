@@ -22,7 +22,6 @@ class HoldingsCreateForm(BaseModel):
     metal: str
     quantity: float
     purchase_price: float
-    currency: str
 
 
 @router.post("/p/{portfolio_id}/holdings")
@@ -35,7 +34,6 @@ async def holdings_create(
         metal=data.metal,
         quantity=data.quantity,
         purchase_price=data.purchase_price,
-        currency=data.currency,
     )
 
     portfolio = get_portfolio(portfolio_id)

@@ -2,12 +2,13 @@ from typing import Literal
 
 from pydantic import UUID4, BaseModel
 
+Metal = Literal["Silver", "Gold"]
+
 
 class Holding(BaseModel):
-    metal: Literal["Silver", "Gold"]
+    metal: Metal
     quantity: float
     purchase_price: float
-    currency: Literal["USD", "GBP", "EUR"]
 
 
 class Portfolio(BaseModel):
