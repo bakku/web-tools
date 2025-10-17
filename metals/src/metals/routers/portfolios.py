@@ -4,7 +4,6 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import UUID4, BaseModel
 
-from ..internal.config import get_gold_api_key
 from ..internal.models import Holding, Metal, Portfolio
 from ..internal.price_service import get_all_metal_prices_in_eur
 from ..internal.repo import add_portfolio, get_portfolio
@@ -94,8 +93,7 @@ async def portfolios_show(_id: UUID4, request: Request) -> HTMLResponse:
 
     # Fetch real-time prices from APIs
     try:
-        api_key = get_gold_api_key()
-        current_prices = await get_all_metal_prices_in_eur(api_key)
+        current_prices = await get_all_metal_prices_in_eur()
     except Exception as e:
         # If API calls fail, return an error response
         raise HTTPException(

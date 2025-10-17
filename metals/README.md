@@ -19,18 +19,9 @@ A web application for tracking precious metals (Gold and Silver) portfolio perfo
 
 ### Installation
 
-1. Install dependencies:
+Install dependencies:
 ```bash
 uv sync
-```
-
-2. Obtain a Gold API key:
-   - Visit [gold-api.com](https://www.gold-api.com/) and sign up for a free account
-   - Copy your API key
-
-3. Set the API key as an environment variable:
-```bash
-export GOLD_API_KEY="your-api-key-here"
 ```
 
 ### Running the Application
@@ -49,15 +40,15 @@ When you view a portfolio, the application:
 3. Calculates metal prices in EUR
 4. Computes your portfolio value, gains, and losses based on real-time prices
 
-**Note**: If the APIs are unavailable or the API key is invalid, you'll see a 503 Service Unavailable error when viewing portfolios.
+**Note**: If the APIs are unavailable, you'll see a 503 Service Unavailable error when viewing portfolios.
 
 ## API Dependencies
 
 This application uses the following external APIs:
 
 - **gold-api.com**: Provides real-time gold and silver prices in USD
-  - Requires API key (free tier available)
-  - Documentation: https://www.gold-api.com/api-docs
+  - Free, no authentication required
+  - Documentation: https://gold-api.com/docs
 
 - **frankfurter.dev**: Provides currency exchange rates (USD to EUR)
   - Free, no authentication required
