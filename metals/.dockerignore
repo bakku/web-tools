@@ -1,0 +1,8 @@
+.git/
+.gitignore
+.venv/
+.idea/
+*.pyc
+.ruff_cache/
+.mypy_cache/
+README.md
