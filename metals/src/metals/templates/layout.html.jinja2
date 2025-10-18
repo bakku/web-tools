@@ -28,8 +28,8 @@
         <div class="metal-prices">
             {% if metal_prices %}
                 <span class="price-label">Current Prices:</span>
-                <span class="price-item">Gold: {{ "%.2f"|format(metal_prices.Gold) }} €/oz</span>
-                <span class="price-item">Silver: {{ "%.2f"|format(metal_prices.Silver) }} €/oz</span>
+                <span class="price-item">Gold: {{ "%.2f"|format(metal_prices['Gold']) }} €/oz</span>
+                <span class="price-item">Silver: {{ "%.2f"|format(metal_prices['Silver']) }} €/oz</span>
             {% endif %}
         </div>
     </div>
