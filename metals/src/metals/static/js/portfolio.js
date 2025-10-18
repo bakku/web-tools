@@ -14,7 +14,7 @@ function updateHomeButton() {
     const form = document.querySelector('form[action="/p"]');
     const button = form?.querySelector('button');
     
-    if (lastPortfolioId && button) {
+    if (lastPortfolioId && button && form) {
         button.textContent = 'Open portfolio';
         form.action = `/p/${lastPortfolioId}`;
         form.method = 'get';
