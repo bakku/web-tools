@@ -6,6 +6,7 @@ Metal = Literal["Silver", "Gold"]
 
 
 class Holding(BaseModel):
+    id: UUID4
     description: str
     metal: Metal
     quantity: float
