@@ -1,27 +1,15 @@
-from contextlib import asynccontextmanager
-from typing import AsyncIterator
+import logging
+import os
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
-from .internal.price_cache import get_price_cache
+from .internal.lifespan import lifespan
 from .routers import holdings, home, portfolios
 from .routers.shared import templates
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Manage application lifespan - startup and shutdown."""
-    # Startup: start background price refresh
-    cache = get_price_cache()
-    cache.start_background_refresh()
-    
-    yield
-    
-    # Shutdown: stop background price refresh
-    await cache.stop_background_refresh()
-
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "WARNING").upper())
 
 app = FastAPI(lifespan=lifespan)
 

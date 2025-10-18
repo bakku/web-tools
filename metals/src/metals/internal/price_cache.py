@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 class PriceFetchError(Exception):
     """Raised when unable to fetch prices from external APIs."""
+
     pass
 
 
@@ -20,7 +21,7 @@ class PriceCache:
     def __init__(self, refresh_interval_seconds: int = 300):
         """
         Initialize price cache.
-        
+
         Args:
             refresh_interval_seconds: How often to refresh prices (default: 300 = 5 minutes)
         """
@@ -33,12 +34,12 @@ class PriceCache:
     async def get_prices(self) -> dict[Metal, float]:
         """
         Get current metal prices from cache.
-        
+
         If cache is empty, fetches prices immediately.
-        
+
         Returns:
             Dictionary mapping Metal to price in EUR
-            
+
         Raises:
             PriceFetchError: If cache is empty and fetching prices fails
         """
@@ -46,9 +47,11 @@ class PriceCache:
             if self._prices is None:
                 logger.info("Cache miss - fetching prices immediately")
                 await self._fetch_prices()
+
                 # If fetch failed and prices are still None, raise an error
                 if self._prices is None:
                     raise PriceFetchError("Unable to fetch prices from external APIs")
+
             return self._prices.copy()
 
     async def _fetch_prices(self) -> None:
@@ -64,11 +67,11 @@ class PriceCache:
     async def _refresh_loop(self) -> None:
         """Background task that periodically refreshes prices."""
         logger.info(f"Starting price refresh loop (interval: {self._refresh_interval})")
-        
+
         # Initial fetch
         async with self._lock:
             await self._fetch_prices()
-        
+
         # Periodic refresh
         while True:
             await asyncio.sleep(self._refresh_interval.total_seconds())
@@ -89,11 +92,14 @@ class PriceCache:
         """Stop the background refresh task."""
         if self._background_task is not None:
             self._background_task.cancel()
+
             try:
                 await self._background_task
             except asyncio.CancelledError:
                 pass
+
             self._background_task = None
+
             logger.info("Background price refresh task stopped")
 
 
@@ -104,12 +110,14 @@ _price_cache: Optional[PriceCache] = None
 def get_price_cache() -> PriceCache:
     """
     Get the global price cache instance.
-    
+
     Note: This function is first called during application startup (in the lifespan
     context), which initializes the singleton before any request handlers run. This
     ensures the singleton pattern is safe in FastAPI's single-threaded event loop.
     """
     global _price_cache
+
     if _price_cache is None:
         _price_cache = PriceCache()
+
     return _price_cache
