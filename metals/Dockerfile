@@ -1,8 +1,8 @@
-FROM ghcr.io/astral-sh/uv:0.8.13-python3.14-alpine
+FROM ghcr.io/astral-sh/uv:0.9.4-python3.14-alpine
 
 WORKDIR /app
 
-COPY pyproject.toml uv.lock .
+COPY pyproject.toml uv.lock ./
 
 RUN uv sync --locked --no-dev
 
