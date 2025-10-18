@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import UUID4, BaseModel
 
 from ..internal.models import Holding, Metal, Portfolio
-from ..internal.price_service import get_all_metal_prices_in_eur
+from ..internal.prices import get_all_metal_prices_in_eur
 from ..internal.repo import add_portfolio, get_portfolio
 from .shared import templates
 
@@ -91,11 +91,9 @@ async def portfolios_show(_id: UUID4, request: Request) -> HTMLResponse:
     if portfolio is None:
         raise HTTPException(status_code=404)
 
-    # Fetch real-time prices from APIs
     try:
         current_prices = await get_all_metal_prices_in_eur()
     except Exception as e:
-        # If API calls fail, return an error response
         raise HTTPException(
             status_code=503,
             detail=f"Unable to fetch current metal prices: {str(e)}",
