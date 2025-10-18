@@ -4,7 +4,7 @@ from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import UUID4, BaseModel
 
-from ..internal.models import Holding
+from ..internal.models import Holding, Metal
 from ..internal.repo import get_portfolio, update_portfolio
 from .shared import templates
 
@@ -19,7 +19,7 @@ async def holdings_new(portfolio_id: UUID4, request: Request) -> HTMLResponse:
 
 
 class HoldingsCreateForm(BaseModel):
-    metal: str
+    metal: Metal
     quantity: float
     purchase_price: float
 
@@ -29,7 +29,6 @@ async def holdings_create(
     portfolio_id: UUID4,
     data: Annotated[HoldingsCreateForm, Form()],
 ) -> RedirectResponse:
-    # TODO: validate data.
     holding = Holding(
         metal=data.metal,
         quantity=data.quantity,
