@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import threading
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -10,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class PriceCache:
-    """Thread-safe cache for metal prices with background refresh."""
+    """Async-safe cache for metal prices with background refresh."""
 
     def __init__(self, refresh_interval_seconds: int = 300):
         """
@@ -24,6 +25,7 @@ class PriceCache:
         self._lock = asyncio.Lock()
         self._refresh_interval = timedelta(seconds=refresh_interval_seconds)
         self._background_task: Optional[asyncio.Task[None]] = None
+        self._task_lock = threading.Lock()
 
     async def get_prices(self) -> dict[Metal, float]:
         """
@@ -33,12 +35,18 @@ class PriceCache:
         
         Returns:
             Dictionary mapping Metal to price in EUR
+            
+        Raises:
+            Exception: If cache is empty and fetching prices fails
         """
         async with self._lock:
             if self._prices is None:
                 logger.info("Cache miss - fetching prices immediately")
                 await self._fetch_prices()
-            return self._prices.copy() if self._prices else {}
+                # If fetch failed and prices are still None, raise an error
+                if self._prices is None:
+                    raise Exception("Unable to fetch prices from external APIs")
+            return self._prices.copy()
 
     async def _fetch_prices(self) -> None:
         """Fetch prices from external APIs and update cache."""
@@ -65,30 +73,40 @@ class PriceCache:
                 await self._fetch_prices()
 
     def start_background_refresh(self) -> None:
-        """Start the background refresh task."""
-        if self._background_task is None:
-            self._background_task = asyncio.create_task(self._refresh_loop())
-            logger.info("Background price refresh task started")
+        """Start the background refresh task (thread-safe)."""
+        with self._task_lock:
+            if self._background_task is None:
+                try:
+                    self._background_task = asyncio.create_task(self._refresh_loop())
+                    logger.info("Background price refresh task started")
+                except Exception as e:
+                    logger.error(f"Failed to start background refresh task: {e}")
+                    raise
 
     async def stop_background_refresh(self) -> None:
-        """Stop the background refresh task."""
-        if self._background_task is not None:
-            self._background_task.cancel()
-            try:
-                await self._background_task
-            except asyncio.CancelledError:
-                pass
-            self._background_task = None
-            logger.info("Background price refresh task stopped")
+        """Stop the background refresh task (thread-safe)."""
+        with self._task_lock:
+            if self._background_task is not None:
+                self._background_task.cancel()
+                try:
+                    await self._background_task
+                except asyncio.CancelledError:
+                    pass
+                self._background_task = None
+                logger.info("Background price refresh task stopped")
 
 
 # Global cache instance
 _price_cache: Optional[PriceCache] = None
+_cache_lock = threading.Lock()
 
 
 def get_price_cache() -> PriceCache:
-    """Get the global price cache instance."""
+    """Get the global price cache instance (thread-safe singleton)."""
     global _price_cache
     if _price_cache is None:
-        _price_cache = PriceCache()
+        with _cache_lock:
+            # Double-check pattern
+            if _price_cache is None:
+                _price_cache = PriceCache()
     return _price_cache
