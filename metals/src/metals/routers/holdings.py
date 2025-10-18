@@ -19,6 +19,7 @@ async def holdings_new(portfolio_id: UUID4, request: Request) -> HTMLResponse:
 
 
 class HoldingsCreateForm(BaseModel):
+    description: str
     metal: Metal
     quantity: float
     purchase_price: float
@@ -30,6 +31,7 @@ async def holdings_create(
     data: Annotated[HoldingsCreateForm, Form()],
 ) -> RedirectResponse:
     holding = Holding(
+        description=data.description,
         metal=data.metal,
         quantity=data.quantity,
         purchase_price=data.purchase_price,
