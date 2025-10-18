@@ -8,7 +8,7 @@ from ..internal.models import Portfolio
 from ..internal.portfolio_calculations import calculate_portfolio_overview
 from ..internal.price_cache import get_price_cache
 from ..internal.repo import add_portfolio, get_portfolio
-from .shared import templates
+from .shared import get_template_context, templates
 
 router = APIRouter()
 
@@ -40,7 +40,7 @@ async def portfolios_show(_id: UUID4, request: Request) -> HTMLResponse:
 
     portfolio_overview = calculate_portfolio_overview(portfolio, current_prices)
 
-    return templates.TemplateResponse(
-        "portfolios/show.html.jinja2",
-        {"portfolio_id": portfolio.id, "data": portfolio_overview, "request": request},
+    context = await get_template_context(
+        portfolio_id=portfolio.id, data=portfolio_overview, request=request
     )
+    return templates.TemplateResponse("portfolios/show.html.jinja2", context)
