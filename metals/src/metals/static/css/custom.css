@@ -54,3 +54,26 @@ header .brand {
 .w-100 {
     width: 100%;
 }
+
+footer {
+    margin-top: var(--pico-block-spacing-vertical);
+    padding-block: var(--pico-block-spacing-vertical);
+    border-top: var(--pico-border-width) solid var(--pico-header-border-color);
+}
+
+.metal-prices {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.price-label {
+    font-weight: 600;
+}
+
+.price-item {
+    color: var(--pico-muted-color);
+}

@@ -7,7 +7,7 @@ from pydantic import UUID4, BaseModel
 from ..internal.models import Holding, Metal, Portfolio
 from ..internal.price_cache import get_price_cache
 from ..internal.repo import add_portfolio, get_portfolio
-from .shared import templates
+from .shared import get_template_context, templates
 
 router = APIRouter()
 
@@ -104,7 +104,7 @@ async def portfolios_show(_id: UUID4, request: Request) -> HTMLResponse:
 
     portfolio_data = calculate_portfolio_display_data(portfolio, current_prices)
 
-    return templates.TemplateResponse(
-        "portfolios/show.html.jinja2",
-        {"portfolio_id": portfolio.id, "data": portfolio_data, "request": request},
+    context = await get_template_context(
+        portfolio_id=portfolio.id, data=portfolio_data, request=request
     )
+    return templates.TemplateResponse("portfolios/show.html.jinja2", context)
