@@ -2,6 +2,15 @@
 
 {% block title %}Your portfolio{% endblock %}
 
+{% block head %}
+    <script src="{{ url_for("static", path="/js/portfolio.js") }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            storePortfolioId('{{ portfolio_id }}');
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
     <section>
         <h3>Your portfolio</h3>
@@ -13,6 +22,7 @@
                 <table class="striped">
                     <thead>
                     <tr>
+                        <th>Description</th>
                         <th>Metal</th>
                         <th>Quantity (oz)</th>
                         <th>Purchase Price per Ounce</th>
@@ -24,6 +34,7 @@
                     <tbody>
                     {% for holding in data.holdings %}
                         <tr>
+                            <td>{{ holding.description }}</td>
                             <td>{{ holding.metal }}</td>
                             <td>{{ "%.2f"|format(holding.quantity) }}</td>
                             <td>{{ "%.2f"|format(holding.purchase_price) }} €</td>
@@ -40,9 +51,7 @@
                     </tbody>
                     <tfoot>
                     <tr class="total-row">
-                        <th><strong>Total</strong></th>
-                        <th></th>
-                        <th></th>
+                        <th colspan="4"><strong>Total</strong></th>
                         <th><strong>{{ "%.2f"|format(data.total_current_value) }} €</strong></th>
                         <th>
                             <strong>
