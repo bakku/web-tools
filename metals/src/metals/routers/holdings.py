@@ -1,3 +1,4 @@
+import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Form, HTTPException, Request
@@ -18,7 +19,32 @@ async def holdings_new(portfolio_id: UUID4, request: Request) -> HTMLResponse:
     )
 
 
-class HoldingsCreateForm(BaseModel):
+@router.get("/p/{portfolio_id}/holdings/{holding_id}/edit")
+async def holdings_edit(
+    portfolio_id: UUID4, holding_id: UUID4, request: Request
+) -> HTMLResponse:
+    portfolio = get_portfolio(portfolio_id)
+
+    if portfolio is None:
+        raise HTTPException(status_code=404)
+
+    holding = next((h for h in portfolio.holdings if h.id == holding_id), None)
+
+    if holding is None:
+        raise HTTPException(status_code=404)
+
+    return templates.TemplateResponse(
+        "holdings/edit.html.jinja2",
+        {
+            "portfolio_id": portfolio_id,
+            "holding_id": holding_id,
+            "holding": holding,
+            "request": request,
+        },
+    )
+
+
+class HoldingForm(BaseModel):
     description: str
     metal: Metal
     quantity: float
@@ -28,9 +54,10 @@ class HoldingsCreateForm(BaseModel):
 @router.post("/p/{portfolio_id}/holdings")
 async def holdings_create(
     portfolio_id: UUID4,
-    data: Annotated[HoldingsCreateForm, Form()],
+    data: Annotated[HoldingForm, Form()],
 ) -> RedirectResponse:
     holding = Holding(
+        id=uuid.uuid4(),
         description=data.description,
         metal=data.metal,
         quantity=data.quantity,
@@ -43,6 +70,52 @@ async def holdings_create(
         raise HTTPException(status_code=404)
 
     portfolio.holdings.append(holding)
+    update_portfolio(portfolio)
+
+    return RedirectResponse(f"/p/{portfolio_id}", status_code=303)
+
+
+@router.post("/p/{portfolio_id}/holdings/{holding_id}")
+async def holdings_update(
+    portfolio_id: UUID4,
+    holding_id: UUID4,
+    data: Annotated[HoldingForm, Form()],
+) -> RedirectResponse:
+    portfolio = get_portfolio(portfolio_id)
+
+    if portfolio is None:
+        raise HTTPException(status_code=404)
+
+    holding_index = next(
+        (i for i, h in enumerate(portfolio.holdings) if h.id == holding_id), None
+    )
+
+    if holding_index is None:
+        raise HTTPException(status_code=404)
+
+    portfolio.holdings[holding_index] = Holding(
+        id=holding_id,
+        description=data.description,
+        metal=data.metal,
+        quantity=data.quantity,
+        purchase_price=data.purchase_price,
+    )
+    update_portfolio(portfolio)
+
+    return RedirectResponse(f"/p/{portfolio_id}", status_code=303)
+
+
+@router.post("/p/{portfolio_id}/holdings/{holding_id}/delete")
+async def holdings_delete(
+    portfolio_id: UUID4,
+    holding_id: UUID4,
+) -> RedirectResponse:
+    portfolio = get_portfolio(portfolio_id)
+
+    if portfolio is None:
+        raise HTTPException(status_code=404)
+
+    portfolio.holdings = [h for h in portfolio.holdings if h.id != holding_id]
     update_portfolio(portfolio)
 
     return RedirectResponse(f"/p/{portfolio_id}", status_code=303)
