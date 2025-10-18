@@ -1,11 +1,17 @@
+import logging
+import os
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+from .internal.lifespan import lifespan
 from .routers import holdings, home, portfolios
 from .routers.shared import templates
 
-app = FastAPI()
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "WARNING").upper())
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.exception_handler(HTTPException)

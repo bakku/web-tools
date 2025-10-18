@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import UUID4, BaseModel
 
 from ..internal.models import Holding, Metal, Portfolio
-from ..internal.prices import get_all_metal_prices_in_eur
+from ..internal.price_cache import get_price_cache
 from ..internal.repo import add_portfolio, get_portfolio
 from .shared import templates
 
@@ -94,7 +94,8 @@ async def portfolios_show(_id: UUID4, request: Request) -> HTMLResponse:
         raise HTTPException(status_code=404)
 
     try:
-        current_prices = await get_all_metal_prices_in_eur()
+        cache = get_price_cache()
+        current_prices = await cache.get_prices()
     except Exception as e:
         raise HTTPException(
             status_code=503,
