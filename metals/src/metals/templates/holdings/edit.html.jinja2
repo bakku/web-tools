@@ -1,0 +1,31 @@
+{% extends "layout.html.jinja2" %}
+
+{% block title %}Edit Holding{% endblock %}
+
+{% block content %}
+    <section>
+        <h3>Edit Holding</h3>
+        <form action="{{ url_for("holdings_update", portfolio_id=portfolio_id, holding_index=holding_index) }}" method="post">
+            <input type="hidden" name="portfolio_id" value="{{ portfolio_id }}">
+            <input type="hidden" name="holding_index" value="{{ holding_index }}">
+            <label for="description">Description</label>
+            <input type="text" name="description" id="description" placeholder="e.g. Britannia silver coins" value="{{ holding.description }}" required>
+            <label for="metal">Metal</label>
+            <select name="metal" id="metal" required>
+                <option value="Silver" {% if holding.metal == "Silver" %}selected{% endif %}>Silver</option>
+                <option value="Gold" {% if holding.metal == "Gold" %}selected{% endif %}>Gold</option>
+            </select>
+            <label for="quantity">Quantity (oz)</label>
+            <input type="number" name="quantity" id="quantity" step="0.01" value="{{ holding.quantity }}" required>
+            <label for="purchase_price">Purchase Price per Ounce (€)</label>
+            <input type="number" name="purchase_price" id="purchase_price" step="0.01" value="{{ holding.purchase_price }}" required>
+            <button type="submit">Update</button>
+        </form>
+        <form action="{{ url_for("holdings_delete", portfolio_id=portfolio_id, holding_index=holding_index) }}" method="post">
+            <input type="hidden" name="portfolio_id" value="{{ portfolio_id }}">
+            <input type="hidden" name="holding_index" value="{{ holding_index }}">
+            <button type="submit" class="secondary">Delete</button>
+        </form>
+        <a role="button" href="{{ url_for("portfolios_show", _id=portfolio_id) }}" class="w-100">Cancel</a>
+    </section>
+{% endblock %}

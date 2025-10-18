@@ -13,6 +13,7 @@ router = APIRouter()
 
 
 class HoldingDisplayData(BaseModel):
+    index: int
     description: str
     metal: str
     quantity: float
@@ -32,7 +33,7 @@ class PortfolioDisplayData(BaseModel):
 
 
 def calculate_holding_display_data(
-    holding: Holding, current_price: float
+    holding: Holding, current_price: float, index: int
 ) -> HoldingDisplayData:
     purchase_cost = holding.quantity * holding.purchase_price
     current_value = holding.quantity * current_price
@@ -40,6 +41,7 @@ def calculate_holding_display_data(
     gain_percent = (absolute_gain / purchase_cost * 100) if purchase_cost > 0 else 0.0
 
     return HoldingDisplayData(
+        index=index,
         description=holding.description,
         metal=holding.metal,
         quantity=holding.quantity,
@@ -55,8 +57,8 @@ def calculate_portfolio_display_data(
     portfolio: Portfolio, current_prices: dict[Metal, float]
 ) -> PortfolioDisplayData:
     holdings_display = [
-        calculate_holding_display_data(holding, current_prices[holding.metal])
-        for holding in portfolio.holdings
+        calculate_holding_display_data(holding, current_prices[holding.metal], i)
+        for i, holding in enumerate(portfolio.holdings)
     ]
 
     total_purchase_cost = sum(h.purchase_cost for h in holdings_display)
