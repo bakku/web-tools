@@ -23,7 +23,8 @@ class PriceCache:
         Initialize price cache.
 
         Args:
-            refresh_interval_seconds: How often to refresh prices (default: 300 = 5 minutes)
+            refresh_interval_seconds: How often to refresh prices
+                (default: 300 = 5 minutes)
         """
         self._prices: Optional[dict[Metal, float]] = None
         self._last_updated: Optional[datetime] = None
