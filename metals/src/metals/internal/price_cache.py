@@ -105,8 +105,9 @@ def get_price_cache() -> PriceCache:
     """
     Get the global price cache instance.
     
-    Note: In FastAPI, this is called from within the async event loop,
-    so it's safe to use without additional locking.
+    Note: This function is first called during application startup (in the lifespan
+    context), which initializes the singleton before any request handlers run. This
+    ensures the singleton pattern is safe in FastAPI's single-threaded event loop.
     """
     global _price_cache
     if _price_cache is None:
