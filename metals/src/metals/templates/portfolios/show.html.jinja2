@@ -13,6 +13,7 @@
                 <table class="striped">
                     <thead>
                     <tr>
+                        <th>Description</th>
                         <th>Metal</th>
                         <th>Quantity (oz)</th>
                         <th>Purchase Price per Ounce</th>
@@ -24,6 +25,7 @@
                     <tbody>
                     {% for holding in data.holdings %}
                         <tr>
+                            <td>{{ holding.description }}</td>
                             <td>{{ holding.metal }}</td>
                             <td>{{ "%.2f"|format(holding.quantity) }}</td>
                             <td>{{ "%.2f"|format(holding.purchase_price) }} €</td>
@@ -40,9 +42,7 @@
                     </tbody>
                     <tfoot>
                     <tr class="total-row">
-                        <th><strong>Total</strong></th>
-                        <th></th>
-                        <th></th>
+                        <th colspan="4"><strong>Total</strong></th>
                         <th><strong>{{ "%.2f"|format(data.total_current_value) }} €</strong></th>
                         <th>
                             <strong>
