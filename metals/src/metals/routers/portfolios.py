@@ -13,6 +13,7 @@ router = APIRouter()
 
 
 class HoldingDisplayData(BaseModel):
+    id: UUID4
     description: str
     metal: str
     quantity: float
@@ -40,6 +41,7 @@ def calculate_holding_display_data(
     gain_percent = (absolute_gain / purchase_cost * 100) if purchase_cost > 0 else 0.0
 
     return HoldingDisplayData(
+        id=holding.id,
         description=holding.description,
         metal=holding.metal,
         quantity=holding.quantity,

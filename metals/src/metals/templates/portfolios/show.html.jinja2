@@ -34,7 +34,7 @@
                     <tbody>
                     {% for holding in data.holdings %}
                         <tr>
-                            <td>{{ holding.description }}</td>
+                            <td><a href="{{ url_for("holdings_edit", portfolio_id=portfolio_id, holding_id=holding.id) }}">{{ holding.description }}</a></td>
                             <td>{{ holding.metal }}</td>
                             <td>{{ "%.2f"|format(holding.quantity) }}</td>
                             <td>{{ "%.2f"|format(holding.purchase_price) }} €</td>
