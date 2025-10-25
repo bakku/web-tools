@@ -16,9 +16,9 @@ def is_development_mode() -> bool:
         True if running in development mode, False otherwise.
     """
     # Check for common development environment indicators
-    return os.getenv("ENVIRONMENT", "").lower() in ("dev", "development") or os.getenv(
-        "DEBUG", ""
-    ).lower() in ("1", "true", "yes")
+    env = os.getenv("ENVIRONMENT", "").lower()
+    debug = os.getenv("DEBUG", "").lower()
+    return env in ("dev", "development") or debug in ("1", "true", "yes")
 
 
 async def build_template_context(**kwargs: Any) -> dict[str, Any]:
