@@ -7,7 +7,7 @@ from pydantic import UUID4
 
 from ..internal.models import Holding
 from ..internal.repo import get_portfolio, update_portfolio
-from .shared import templates
+from .shared import build_template_context, templates
 from .types import HoldingForm
 
 router = APIRouter()
@@ -15,9 +15,8 @@ router = APIRouter()
 
 @router.get("/p/{portfolio_id}/holdings/new")
 async def holdings_new(portfolio_id: UUID4, request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(
-        "holdings/new.html.jinja2", {"portfolio_id": portfolio_id, "request": request}
-    )
+    context = await build_template_context(portfolio_id=portfolio_id, request=request)
+    return templates.TemplateResponse("holdings/new.html.jinja2", context)
 
 
 @router.post("/p/{portfolio_id}/holdings")
@@ -58,14 +57,16 @@ async def holdings_edit(
     if holding is None:
         raise HTTPException(status_code=404)
 
+    context = await build_template_context(
+        portfolio_id=portfolio_id,
+        holding_id=holding_id,
+        holding=holding,
+        request=request,
+    )
+
     return templates.TemplateResponse(
         "holdings/edit.html.jinja2",
-        {
-            "portfolio_id": portfolio_id,
-            "holding_id": holding_id,
-            "holding": holding,
-            "request": request,
-        },
+        context,
     )
 
 

@@ -12,6 +12,16 @@
     }
 }
 
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
 header {
     padding-block: 0 !important;
     z-index: 2;
@@ -64,4 +74,27 @@ button.danger {
 
 button.danger:hover {
     filter: brightness(1.2);
+}
+
+footer {
+    display: flex;
+    flex-direction: row;
+}
+
+footer .links {
+    flex: 1;
+}
+
+.metal-prices {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.price-item {
+    color: var(--pico-muted-color);
 }

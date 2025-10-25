@@ -22,5 +22,15 @@
 <main class="container">
     {% block content %}{% endblock %}
 </main>
+
+<footer class="container">
+    <div class="links"><!-- Will contain links --></div>
+    <div class="metal-prices">
+        {% if metal_prices %}
+            <span class="price-item">Gold: {{ "%.2f"|format(metal_prices['Gold']) }} €/oz</span>
+            <span class="price-item">Silver: {{ "%.2f"|format(metal_prices['Silver']) }} €/oz</span>
+        {% endif %}
+    </div>
+</footer>
 </body>
 </html>
