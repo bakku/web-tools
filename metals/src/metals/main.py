@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .internal.price_cache import get_price_cache
 from .routers import holdings, home, portfolios
-from .routers.shared import get_template_context, templates
+from .routers.shared import templates
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "WARNING").upper())
 
@@ -32,10 +32,9 @@ app = FastAPI(lifespan=lifespan)
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException) -> HTMLResponse:
     if exc.status_code == 404:
-        context = await get_template_context(request=request)
         return templates.TemplateResponse(
             "404.html.jinja2",
-            context,
+            {"request": request},
             status_code=404,
         )
 

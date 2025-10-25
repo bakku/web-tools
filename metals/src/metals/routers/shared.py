@@ -7,19 +7,19 @@ from ..internal.price_cache import PriceFetchError, get_price_cache
 templates = Jinja2Templates(directory="src/metals/templates")
 
 
-async def get_template_context(**kwargs: Any) -> dict[str, Any]:
+async def build_template_context(**kwargs: Any) -> dict[str, Any]:
     """
-    Get template context with metal prices injected.
+    Builds template context with shared values such as metal prices automatically
+    included.
 
     Args:
         **kwargs: Additional context variables to include
 
     Returns:
-        Dictionary with all context variables including metal_prices
+        Dictionary with all context variables including shared values.
     """
     context = dict(kwargs)
 
-    # Try to get metal prices, but don't fail if unavailable
     try:
         cache = get_price_cache()
         metal_prices = await cache.get_prices()
