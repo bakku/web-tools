@@ -20,8 +20,8 @@
             <button type="submit">Update</button>
         </form>
         <form action="{{ url_for("holdings_delete", portfolio_id=portfolio_id, holding_id=holding_id) }}" method="post">
-            <button type="submit" class="secondary">Delete</button>
+            <button type="submit" class="danger">Delete</button>
         </form>
-        <a role="button" href="{{ url_for("portfolios_show", _id=portfolio_id) }}" class="w-100">Cancel</a>
+        <a role="button" href="{{ url_for("portfolios_show", _id=portfolio_id) }}" class="secondary w-100">Cancel</a>
     </section>
 {% endblock %}

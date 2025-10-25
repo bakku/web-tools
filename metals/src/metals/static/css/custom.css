@@ -2,11 +2,13 @@
     @media (prefers-color-scheme: light) {
         --pico-header-background: rgba(255, 255, 255, .8);
         --pico-header-border-color: #eff1f4;
+        --pico-danger-color: #ac2222;
     }
 
     @media (prefers-color-scheme: dark) {
         --pico-header-background: rgba(19, 22.5, 30.5, .9);
         --pico-header-border-color: rgba(32, 38, 50, .9);
+        --pico-danger-color: #ac2222;
     }
 }
 
@@ -53,4 +55,13 @@ header .brand {
 
 .w-100 {
     width: 100%;
+}
+
+button.danger {
+    background-color: var(--pico-danger-color);
+    border-color: var(--pico-danger-color);
+}
+
+button.danger:hover {
+    filter: brightness(1.2);
 }
