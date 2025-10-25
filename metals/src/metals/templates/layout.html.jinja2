@@ -6,6 +6,9 @@
     <title>{% block title %}{% endblock %} | Metals</title>
     <link rel="stylesheet" href="{{ url_for("static", path="/css/pico.zinc.min.css") }}">
     <link rel="stylesheet" href="{{ url_for("static", path="/css/custom.css") }}">
+    {% if is_dev_mode %}
+    <script src="{{ url_for("static", path="/js/dev-tools.js") }}"></script>
+    {% endif %}
     {% block head %}{% endblock %}
 </head>
 <body>
@@ -15,6 +18,16 @@
             <ul>
                 <li class="brand"><a href="/">Metals</a></li>
             </ul>
+            {% if is_dev_mode %}
+            <ul>
+                <li>
+                    <select id="dev-tools-select" class="dev-tools-select">
+                        <option value="">Dev Tools</option>
+                        <option value="clear-portfolio-storage">Clear Portfolio Storage</option>
+                    </select>
+                </li>
+            </ul>
+            {% endif %}
         </nav>
     </div>
 </header>

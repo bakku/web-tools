@@ -1,3 +1,4 @@
+import os
 from typing import Any
 
 from fastapi.templating import Jinja2Templates
@@ -5,6 +6,19 @@ from fastapi.templating import Jinja2Templates
 from ..internal.price_cache import PriceFetchError, get_price_cache
 
 templates = Jinja2Templates(directory="src/metals/templates")
+
+
+def is_development_mode() -> bool:
+    """
+    Check if the application is running in development mode.
+
+    Returns:
+        True if running in development mode, False otherwise.
+    """
+    # Check for common development environment indicators
+    return os.getenv("ENVIRONMENT", "").lower() in ("dev", "development") or os.getenv(
+        "DEBUG", ""
+    ).lower() in ("1", "true", "yes")
 
 
 async def build_template_context(**kwargs: Any) -> dict[str, Any]:
@@ -27,5 +41,8 @@ async def build_template_context(**kwargs: Any) -> dict[str, Any]:
     except PriceFetchError:
         # Prices not available, template will handle missing prices gracefully
         context["metal_prices"] = None
+
+    # Add development mode flag
+    context["is_dev_mode"] = is_development_mode()
 
     return context
