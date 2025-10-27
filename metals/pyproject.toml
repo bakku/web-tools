@@ -28,4 +28,5 @@ mypy_path = "src"
 
 [tool.ruff]
 lint.select = ["E", "F", "I"]
+exclude = ["migrations"]
 
