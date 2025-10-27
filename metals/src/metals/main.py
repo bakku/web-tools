@@ -1,5 +1,3 @@
-import logging
-import os
 from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
@@ -10,8 +8,6 @@ from fastapi.staticfiles import StaticFiles
 from .internal.price_cache import get_price_cache
 from .routers import holdings, home, portfolios
 from .routers.shared import templates
-
-logging.basicConfig(level=os.getenv("LOG_LEVEL", "WARNING").upper())
 
 
 @asynccontextmanager

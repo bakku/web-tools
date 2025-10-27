@@ -1,5 +1,5 @@
-from .models import Holding, Metal, Portfolio
-from .types import HoldingOverview, PortfolioOverview
+from .persistency.models import Holding, Portfolio
+from .types import HoldingOverview, Metal, PortfolioOverview
 
 
 def _calculate_holding_overview(

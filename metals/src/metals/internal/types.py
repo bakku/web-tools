@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import UUID4, BaseModel
 
 
@@ -19,3 +21,6 @@ class PortfolioOverview(BaseModel):
     total_current_value: float
     total_gain_percent: float
     total_absolute_gain: float
+
+
+Metal = Literal["Silver", "Gold"]

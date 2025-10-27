@@ -2,12 +2,11 @@ import uuid
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from pydantic import UUID4
 
-from ..internal.models import Portfolio
+from ..internal.persistency.models import Portfolio
+from ..internal.persistency.queries import get_portfolio, insert_portfolio
 from ..internal.portfolio_calculations import calculate_portfolio_overview
 from ..internal.price_cache import get_price_cache
-from ..internal.repo import add_portfolio, get_portfolio
 from .shared import build_template_context, templates
 
 router = APIRouter()
@@ -15,15 +14,13 @@ router = APIRouter()
 
 @router.post("/p/")
 async def portfolios_create() -> RedirectResponse:
-    portfolio = Portfolio(id=uuid.uuid4(), holdings=[])
-
-    add_portfolio(portfolio)
+    portfolio = insert_portfolio(Portfolio())
 
     return RedirectResponse(f"/p/{portfolio.id}", status_code=303)
 
 
 @router.get("/p/{_id}")
-async def portfolios_show(_id: UUID4, request: Request) -> HTMLResponse:
+async def portfolios_show(_id: uuid.UUID, request: Request) -> HTMLResponse:
     portfolio = get_portfolio(_id)
 
     if portfolio is None:
