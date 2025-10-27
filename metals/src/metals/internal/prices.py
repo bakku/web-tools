@@ -9,7 +9,7 @@ Symbol = Literal["XAU", "XAG"]
 GOLD_API_BASE_URL = "https://api.gold-api.com/"
 FRANKFURTER_API_BASE_URL = "https://api.frankfurter.app/"
 
-METAL_TO_SYMBOL: dict[Metal, Symbol] = {"Gold": "XAU", "Silver": "XAG"}
+METAL_TO_SYMBOL: dict[Metal, Symbol] = {Metal.GOLD: "XAU", Metal.SILVER: "XAG"}
 
 
 async def _get_metal_price_in_usd(metal: Metal) -> float:
@@ -43,7 +43,7 @@ async def _get_usd_to_eur_rate() -> float:
 async def get_all_metal_prices_in_eur() -> dict[Metal, float]:
     usd_to_eur = await _get_usd_to_eur_rate()
 
-    metals: list[Metal] = ["Gold", "Silver"]
+    metals: list[Metal] = [Metal.GOLD, Metal.SILVER]
     prices: dict[Metal, float] = {}
 
     for metal in metals:

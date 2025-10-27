@@ -1,10 +1,16 @@
-from typing import Literal
+import uuid
+from enum import Enum
 
-from pydantic import UUID4, BaseModel
+from pydantic import BaseModel
+
+
+class Metal(str, Enum):
+    SILVER = "Silver"
+    GOLD = "Gold"
 
 
 class HoldingOverview(BaseModel):
-    id: UUID4
+    id: uuid.UUID
     description: str
     metal: str
     quantity: float
@@ -21,6 +27,3 @@ class PortfolioOverview(BaseModel):
     total_current_value: float
     total_gain_percent: float
     total_absolute_gain: float
-
-
-Metal = Literal["Silver", "Gold"]

@@ -4,6 +4,8 @@ from datetime import datetime
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
+from src.metals.internal.types import Metal
+
 
 class BaseModel(DeclarativeBase):
     pass
@@ -14,8 +16,7 @@ class Holding(BaseModel):
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     description: Mapped[str]
-    # TODO: Check whether enum should be used here?
-    metal: Mapped[str]
+    metal: Mapped[Metal]
     quantity: Mapped[float]
     purchase_price: Mapped[float]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
