@@ -1,5 +1,4 @@
 import uuid
-from datetime import datetime
 from typing import Annotated
 
 from fastapi import APIRouter, Form, HTTPException, Request
@@ -85,7 +84,6 @@ async def holdings_update(
     holding.metal = data.metal
     holding.quantity = data.quantity
     holding.purchase_price = data.purchase_price
-    holding.updated_at = datetime.now()
 
     update_holding(holding)
 
