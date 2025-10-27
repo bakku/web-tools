@@ -43,6 +43,7 @@ async def _get_usd_to_eur_rate() -> float:
 async def get_all_metal_prices_in_eur() -> dict[Metal, float]:
     usd_to_eur = await _get_usd_to_eur_rate()
 
+    # TODO: Find better way to do that.
     metals: list[Metal] = [Metal.GOLD, Metal.SILVER]
     prices: dict[Metal, float] = {}
 
