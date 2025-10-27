@@ -3,8 +3,8 @@ import logging
 from datetime import datetime, timedelta
 from typing import Optional
 
-from .models import Metal
 from .prices import get_all_metal_prices_in_eur
+from .types import Metal
 
 logger = logging.getLogger(__name__)
 

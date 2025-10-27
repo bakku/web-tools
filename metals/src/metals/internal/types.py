@@ -1,8 +1,16 @@
-from pydantic import UUID4, BaseModel
+import uuid
+from enum import Enum
+
+from pydantic import BaseModel
+
+
+class Metal(str, Enum):
+    SILVER = "Silver"
+    GOLD = "Gold"
 
 
 class HoldingOverview(BaseModel):
-    id: UUID4
+    id: uuid.UUID
     description: str
     metal: str
     quantity: float
