@@ -20,7 +20,9 @@ class Holding(BaseModel):
     quantity: Mapped[float]
     purchase_price: Mapped[float]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(
+        default=datetime.now, onupdate=datetime.now
+    )
 
     portfolio_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("portfolios.id", ondelete="CASCADE")
@@ -33,7 +35,9 @@ class Portfolio(BaseModel):
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(
+        default=datetime.now, onupdate=datetime.now
+    )
 
     holdings: Mapped[list[Holding]] = relationship(
         back_populates="portfolio", cascade="all, delete-orphan"
