@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
-from ..internal.persistency.db import get_db
+from ..internal.persistency.db import get_session
 from ..internal.persistency.models import Holding
 from ..internal.persistency.queries import (
     delete_holding,
@@ -30,7 +30,7 @@ async def holdings_new(portfolio_id: uuid.UUID, request: Request) -> HTMLRespons
 async def holdings_create(
     portfolio_id: uuid.UUID,
     data: Annotated[HoldingForm, Form()],
-    db: Annotated[Session, Depends(get_db)],
+    session: Annotated[Session, Depends(get_session)],
 ) -> RedirectResponse:
     holding = Holding(
         description=data.description,
@@ -39,13 +39,13 @@ async def holdings_create(
         purchase_price=data.purchase_price,
     )
 
-    portfolio = get_portfolio(db, portfolio_id)
+    portfolio = get_portfolio(session, portfolio_id)
 
     if portfolio is None:
         raise HTTPException(status_code=404)
 
     portfolio.holdings.append(holding)
-    update_portfolio(db, portfolio)
+    update_portfolio(session, portfolio)
 
     return RedirectResponse(f"/p/{portfolio_id}", status_code=303)
 
@@ -55,9 +55,9 @@ async def holdings_edit(
     portfolio_id: uuid.UUID,
     holding_id: uuid.UUID,
     request: Request,
-    db: Annotated[Session, Depends(get_db)],
+    session: Annotated[Session, Depends(get_session)],
 ) -> HTMLResponse:
-    holding = get_holding(db, portfolio_id, holding_id)
+    holding = get_holding(session, portfolio_id, holding_id)
 
     if holding is None:
         raise HTTPException(status_code=404)
@@ -80,9 +80,9 @@ async def holdings_update(
     portfolio_id: uuid.UUID,
     holding_id: uuid.UUID,
     data: Annotated[HoldingForm, Form()],
-    db: Annotated[Session, Depends(get_db)],
+    session: Annotated[Session, Depends(get_session)],
 ) -> RedirectResponse:
-    holding = get_holding(db, portfolio_id, holding_id)
+    holding = get_holding(session, portfolio_id, holding_id)
 
     if holding is None:
         raise HTTPException(status_code=404)
@@ -92,7 +92,7 @@ async def holdings_update(
     holding.quantity = data.quantity
     holding.purchase_price = data.purchase_price
 
-    update_holding(db, holding)
+    update_holding(session, holding)
 
     return RedirectResponse(f"/p/{portfolio_id}", status_code=303)
 
@@ -101,13 +101,13 @@ async def holdings_update(
 async def holdings_delete(
     portfolio_id: uuid.UUID,
     holding_id: uuid.UUID,
-    db: Annotated[Session, Depends(get_db)],
+    session: Annotated[Session, Depends(get_session)],
 ) -> RedirectResponse:
-    holding = get_holding(db, portfolio_id, holding_id)
+    holding = get_holding(session, portfolio_id, holding_id)
 
     if holding is None:
         raise HTTPException(status_code=404)
 
-    delete_holding(db, holding)
+    delete_holding(session, holding)
 
     return RedirectResponse(f"/p/{portfolio_id}", status_code=303)
