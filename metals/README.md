@@ -11,7 +11,12 @@ A web application for tracking precious metals (Gold and Silver) portfolio perfo
 
 ### Installation
 
-Install dependencies:
+1. Copy the environment template file:
+```bash
+cp .env.template .env
+```
+
+2. Install dependencies:
 ```bash
 uv sync
 ```
