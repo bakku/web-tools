@@ -23,11 +23,10 @@ def get_portfolio(session: Session, portfolio_id: uuid.UUID) -> Portfolio | None
 
 
 def update_portfolio(session: Session, portfolio: Portfolio) -> Portfolio:
-    merged = session.merge(portfolio)
     session.commit()
-    session.refresh(merged)
+    session.refresh(portfolio)
 
-    return merged
+    return portfolio
 
 
 def get_holding(
@@ -41,11 +40,10 @@ def get_holding(
 
 
 def update_holding(session: Session, holding: Holding) -> Holding:
-    merged = session.merge(holding)
     session.commit()
-    session.refresh(merged)
+    session.refresh(holding)
 
-    return merged
+    return holding
 
 
 def delete_holding(session: Session, holding: Holding) -> None:
