@@ -5,18 +5,29 @@
 {% block content %}
     <section>
         <h3>Edit Holding</h3>
+        {% if errors %}
+            <article style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 1rem; margin-bottom: 1rem; border-radius: 0.25rem;">
+                <strong>Please fix the following errors:</strong>
+                <ul style="margin: 0.5rem 0 0 1.5rem;">
+                    {% for field, message in errors.items() %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </article>
+        {% endif %}
         <form action="{{ url_for("holdings_update", portfolio_id=portfolio_id, holding_id=holding_id) }}" method="post">
             <label for="description">Description</label>
-            <input type="text" name="description" id="description" placeholder="e.g. Britannia silver coins" value="{{ holding.description }}" required>
+            <input type="text" name="description" id="description" placeholder="e.g. Britannia silver coins" value="{{ form_data.description if form_data else holding.description }}" required>
             <label for="metal">Metal</label>
             <select name="metal" id="metal" required>
-                <option value="Silver" {% if holding.metal == "Silver" %}selected{% endif %}>Silver</option>
-                <option value="Gold" {% if holding.metal == "Gold" %}selected{% endif %}>Gold</option>
+                {% set selected_metal = form_data.metal if form_data else holding.metal %}
+                <option value="Silver" {% if selected_metal == "Silver" %}selected{% endif %}>Silver</option>
+                <option value="Gold" {% if selected_metal == "Gold" %}selected{% endif %}>Gold</option>
             </select>
             <label for="quantity">Quantity (oz)</label>
-            <input type="number" name="quantity" id="quantity" step="0.01" value="{{ holding.quantity }}" required>
+            <input type="number" name="quantity" id="quantity" step="0.01" value="{{ form_data.quantity if form_data else holding.quantity }}" required>
             <label for="purchase_price">Purchase Price per Ounce (€)</label>
-            <input type="number" name="purchase_price" id="purchase_price" step="0.01" value="{{ holding.purchase_price }}" required>
+            <input type="number" name="purchase_price" id="purchase_price" step="0.01" value="{{ form_data.purchase_price if form_data else holding.purchase_price }}" required>
             <button type="submit">Update</button>
         </form>
         <form action="{{ url_for("holdings_delete", portfolio_id=portfolio_id, holding_id=holding_id) }}" method="post">

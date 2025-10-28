@@ -1,8 +1,9 @@
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Request
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
+from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from metals.internal.persistency.db import get_session
@@ -26,12 +27,55 @@ async def holdings_new(portfolio_id: uuid.UUID, request: Request) -> HTMLRespons
     return templates.TemplateResponse("holdings/new.html.jinja2", context)
 
 
-@router.post("/p/{portfolio_id}/holdings")
+@router.post("/p/{portfolio_id}/holdings", response_model=None)
 async def holdings_create(
     portfolio_id: uuid.UUID,
-    data: Annotated[HoldingForm, Form()],
+    request: Request,
     session: Annotated[Session, Depends(get_session)],
-) -> RedirectResponse:
+    description: Annotated[str, Form()],
+    metal: Annotated[str, Form()],
+    quantity: Annotated[str, Form()],
+    purchase_price: Annotated[str, Form()],
+) -> Response:
+    # Validate the form data
+    try:
+        # Convert string metal to Metal enum
+        from ..internal.types import Metal
+
+        metal_enum = Metal(metal)
+
+        # Try to validate all fields
+        data = HoldingForm(
+            description=description,
+            metal=metal_enum,
+            quantity=float(quantity),
+            purchase_price=float(purchase_price),
+        )
+    except (ValueError, ValidationError) as e:
+        # Handle validation errors
+        errors = {}
+        if isinstance(e, ValidationError):
+            for error in e.errors():
+                field = error["loc"][-1]
+                errors[field] = error["msg"]
+        else:
+            # Handle conversion errors
+            errors["general"] = str(e)
+
+        # Return to form with errors
+        context = await build_template_context(
+            portfolio_id=portfolio_id,
+            request=request,
+            errors=errors,
+            form_data={
+                "description": description,
+                "metal": metal,
+                "quantity": quantity,
+                "purchase_price": purchase_price,
+            },
+        )
+        return templates.TemplateResponse("holdings/new.html.jinja2", context)
+
     holding = Holding(
         description=data.description,
         metal=data.metal,
@@ -75,17 +119,62 @@ async def holdings_edit(
     )
 
 
-@router.post("/p/{portfolio_id}/holdings/{holding_id}")
+@router.post("/p/{portfolio_id}/holdings/{holding_id}", response_model=None)
 async def holdings_update(
     portfolio_id: uuid.UUID,
     holding_id: uuid.UUID,
-    data: Annotated[HoldingForm, Form()],
+    request: Request,
     session: Annotated[Session, Depends(get_session)],
-) -> RedirectResponse:
+    description: Annotated[str, Form()],
+    metal: Annotated[str, Form()],
+    quantity: Annotated[str, Form()],
+    purchase_price: Annotated[str, Form()],
+) -> Response:
     holding = get_holding(session, portfolio_id, holding_id)
 
     if holding is None:
         raise HTTPException(status_code=404)
+
+    # Validate the form data
+    try:
+        # Convert string metal to Metal enum
+        from ..internal.types import Metal
+
+        metal_enum = Metal(metal)
+
+        # Try to validate all fields
+        data = HoldingForm(
+            description=description,
+            metal=metal_enum,
+            quantity=float(quantity),
+            purchase_price=float(purchase_price),
+        )
+    except (ValueError, ValidationError) as e:
+        # Handle validation errors
+        errors = {}
+        if isinstance(e, ValidationError):
+            for error in e.errors():
+                field = error["loc"][-1]
+                errors[field] = error["msg"]
+        else:
+            # Handle conversion errors
+            errors["general"] = str(e)
+
+        # Return to form with errors
+        context = await build_template_context(
+            portfolio_id=portfolio_id,
+            holding_id=holding_id,
+            holding=holding,
+            request=request,
+            errors=errors,
+            form_data={
+                "description": description,
+                "metal": metal,
+                "quantity": quantity,
+                "purchase_price": purchase_price,
+            },
+        )
+        return templates.TemplateResponse("holdings/edit.html.jinja2", context)
 
     holding.description = data.description
     holding.metal = data.metal
