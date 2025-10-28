@@ -34,20 +34,42 @@ def _validate_holding_form(
         field errors.
     """
     errors: dict[str, str] = {}
+
+    # First, validate numeric conversions
+    try:
+        quantity_float = float(quantity)
+    except ValueError:
+        errors["quantity"] = "Quantity must be a valid number"
+        quantity_float = 0.0  # Use placeholder for validation
+
+    try:
+        purchase_price_float = float(purchase_price)
+    except ValueError:
+        errors["purchase_price"] = "Purchase price must be a valid number"
+        purchase_price_float = 0.0  # Use placeholder for validation
+
+    # If we already have conversion errors, return early
+    if errors:
+        return None, errors
+
+    # Now validate with Pydantic
     try:
         metal_enum = Metal(metal)
         form = HoldingForm(
             description=description,
             metal=metal_enum,
-            quantity=float(quantity),
-            purchase_price=float(purchase_price),
+            quantity=quantity_float,
+            purchase_price=purchase_price_float,
         )
         return form, errors
     except (ValueError, ValidationError) as e:
         if isinstance(e, ValidationError):
             for error in e.errors():
-                field = str(error["loc"][-1])
-                errors[field] = error["msg"]
+                # Safely extract field name from location
+                loc = error.get("loc", ())
+                if loc:
+                    field = str(loc[-1])
+                    errors[field] = error["msg"]
         else:
             errors["general"] = str(e)
         return None, errors
