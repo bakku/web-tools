@@ -80,9 +80,6 @@ def insert_metal_prices_batch(
     session.add_all(metal_prices)
     session.commit()
 
-    for metal_price in metal_prices:
-        session.refresh(metal_price)
-
     return metal_prices
 
 
