@@ -5,19 +5,29 @@
 {% block content %}
     <section>
         <h3>Add Holding</h3>
+        {% if errors %}
+            <article style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 1rem; margin-bottom: 1rem; border-radius: 0.25rem;">
+                <strong>Please fix the following errors:</strong>
+                <ul style="margin: 0.5rem 0 0 1.5rem;">
+                    {% for field, message in errors.items() %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </article>
+        {% endif %}
         <form action="{{ url_for("holdings_create", portfolio_id=portfolio_id) }}" method="post">
             <input type="hidden" name="portfolio_id" value="{{ portfolio_id }}">
             <label for="description">Description</label>
-            <input type="text" name="description" id="description" placeholder="e.g. Britannia silver coins" required>
+            <input type="text" name="description" id="description" placeholder="e.g. Britannia silver coins" value="{{ form_data.description if form_data else '' }}" required>
             <label for="metal">Metal</label>
             <select name="metal" id="metal" required>
-                <option value="Silver">Silver</option>
-                <option value="Gold">Gold</option>
+                <option value="Silver" {% if form_data and form_data.metal == "Silver" %}selected{% endif %}>Silver</option>
+                <option value="Gold" {% if form_data and form_data.metal == "Gold" %}selected{% endif %}>Gold</option>
             </select>
             <label for="quantity">Quantity (oz)</label>
-            <input type="number" name="quantity" id="quantity" step="0.01" required>
+            <input type="number" name="quantity" id="quantity" step="0.01" value="{{ form_data.quantity if form_data else '' }}" required>
             <label for="purchase_price">Purchase Price per Ounce (€)</label>
-            <input type="number" name="purchase_price" id="purchase_price" step="0.01" required>
+            <input type="number" name="purchase_price" id="purchase_price" step="0.01" value="{{ form_data.purchase_price if form_data else '' }}" required>
             <button type="submit">Add Holding</button>
             <a role="button" href="{{ url_for("portfolios_show", _id=portfolio_id) }}" class="secondary w-100">Cancel</a>
         </form>
