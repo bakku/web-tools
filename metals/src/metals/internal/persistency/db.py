@@ -4,8 +4,11 @@ from collections.abc import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-# TODO: echo should be dependent on whether being in development or production
-engine = create_engine(os.getenv("DATABASE_URL", "sqlite:///db/database.db"), echo=True)
+from ...routers.shared import is_development_mode
+
+engine = create_engine(
+    os.getenv("DATABASE_URL", "sqlite:///db/database.db"), echo=is_development_mode()
+)
 
 
 def get_session() -> Generator[Session, None, None]:
