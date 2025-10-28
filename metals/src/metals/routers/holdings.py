@@ -15,10 +15,42 @@ from metals.internal.persistency.queries import (
     update_holding,
     update_portfolio,
 )
+from metals.internal.types import Metal
 from metals.routers.shared import build_template_context, templates
 from metals.routers.types import HoldingForm
 
 router = APIRouter()
+
+
+def _validate_holding_form(
+    description: str, metal: str, quantity: str, purchase_price: str
+) -> tuple[HoldingForm | None, dict[str, str]]:
+    """
+    Validate holding form data.
+
+    Returns:
+        Tuple of (validated_form, errors). If validation succeeds, errors dict is
+        empty. If validation fails, validated_form is None and errors dict contains
+        field errors.
+    """
+    errors: dict[str, str] = {}
+    try:
+        metal_enum = Metal(metal)
+        form = HoldingForm(
+            description=description,
+            metal=metal_enum,
+            quantity=float(quantity),
+            purchase_price=float(purchase_price),
+        )
+        return form, errors
+    except (ValueError, ValidationError) as e:
+        if isinstance(e, ValidationError):
+            for error in e.errors():
+                field = str(error["loc"][-1])
+                errors[field] = error["msg"]
+        else:
+            errors["general"] = str(e)
+        return None, errors
 
 
 @router.get("/p/{portfolio_id}/holdings/new")
@@ -38,30 +70,9 @@ async def holdings_create(
     purchase_price: Annotated[str, Form()],
 ) -> Response:
     # Validate the form data
-    try:
-        # Convert string metal to Metal enum
-        from ..internal.types import Metal
+    data, errors = _validate_holding_form(description, metal, quantity, purchase_price)
 
-        metal_enum = Metal(metal)
-
-        # Try to validate all fields
-        data = HoldingForm(
-            description=description,
-            metal=metal_enum,
-            quantity=float(quantity),
-            purchase_price=float(purchase_price),
-        )
-    except (ValueError, ValidationError) as e:
-        # Handle validation errors
-        errors = {}
-        if isinstance(e, ValidationError):
-            for error in e.errors():
-                field = error["loc"][-1]
-                errors[field] = error["msg"]
-        else:
-            # Handle conversion errors
-            errors["general"] = str(e)
-
+    if errors:
         # Return to form with errors
         context = await build_template_context(
             portfolio_id=portfolio_id,
@@ -75,6 +86,8 @@ async def holdings_create(
             },
         )
         return templates.TemplateResponse("holdings/new.html.jinja2", context)
+
+    assert data is not None  # For type checker
 
     holding = Holding(
         description=data.description,
@@ -136,30 +149,9 @@ async def holdings_update(
         raise HTTPException(status_code=404)
 
     # Validate the form data
-    try:
-        # Convert string metal to Metal enum
-        from ..internal.types import Metal
+    data, errors = _validate_holding_form(description, metal, quantity, purchase_price)
 
-        metal_enum = Metal(metal)
-
-        # Try to validate all fields
-        data = HoldingForm(
-            description=description,
-            metal=metal_enum,
-            quantity=float(quantity),
-            purchase_price=float(purchase_price),
-        )
-    except (ValueError, ValidationError) as e:
-        # Handle validation errors
-        errors = {}
-        if isinstance(e, ValidationError):
-            for error in e.errors():
-                field = error["loc"][-1]
-                errors[field] = error["msg"]
-        else:
-            # Handle conversion errors
-            errors["general"] = str(e)
-
+    if errors:
         # Return to form with errors
         context = await build_template_context(
             portfolio_id=portfolio_id,
@@ -175,6 +167,8 @@ async def holdings_update(
             },
         )
         return templates.TemplateResponse("holdings/edit.html.jinja2", context)
+
+    assert data is not None  # For type checker
 
     holding.description = data.description
     holding.metal = data.metal
