@@ -8,7 +8,7 @@ from metals.internal.price_cache import PriceFetchError, get_price_cache
 templates = Jinja2Templates(directory="src/metals/templates")
 
 
-def _is_development_mode() -> bool:
+def is_development_mode() -> bool:
     return os.getenv("APP_ENV", "").lower() == "development"
 
 
@@ -33,6 +33,6 @@ async def build_template_context(**kwargs: Any) -> dict[str, Any]:
         # Prices not available, template will handle missing prices gracefully
         context["metal_prices"] = None
 
-    context["is_dev_mode"] = _is_development_mode()
+    context["is_dev_mode"] = is_development_mode()
 
     return context
