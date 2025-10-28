@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 
-from .shared import build_template_context, templates
+from metals.routers.shared import build_template_context, templates
 
 router = APIRouter()
 

@@ -5,7 +5,7 @@ from alembic import context
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 
-from src.metals.internal.persistency import models
+from metals.internal.persistency import models
 
 load_dotenv()
 

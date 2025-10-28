@@ -5,9 +5,9 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
-from .internal.price_cache import get_price_cache
-from .routers import holdings, home, portfolios
-from .routers.shared import templates
+from metals.internal.price_cache import get_price_cache
+from metals.routers import holdings, home, portfolios
+from metals.routers.shared import templates
 
 
 @asynccontextmanager

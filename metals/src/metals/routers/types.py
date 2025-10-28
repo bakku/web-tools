@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from ..internal.types import Metal
+from metals.internal.types import Metal
 
 
 class HoldingForm(BaseModel):
