@@ -1,5 +1,3 @@
-// Dev tools functionality for development mode
-
 function initDevTools() {
     const devToolsSelect = document.getElementById('dev-tools-select');
     
@@ -11,7 +9,7 @@ function initDevTools() {
                 clearPortfolioStorage();
             }
             
-            // Reset select to default option after action
+            // Reset to default value.
             e.target.value = '';
         });
     }
@@ -19,10 +17,7 @@ function initDevTools() {
 
 function clearPortfolioStorage() {
     localStorage.removeItem('lastPortfolioId');
-    alert('Portfolio storage cleared! The last used portfolio ID has been removed from local storage.');
+    window.location.reload();
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initDevTools();
-});
+document.addEventListener('DOMContentLoaded', initDevTools);
