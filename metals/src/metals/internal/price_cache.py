@@ -5,7 +5,7 @@ from datetime import timedelta
 from sqlalchemy.orm import Session
 
 from metals.internal.persistency.db import engine
-from metals.internal.persistency.queries import insert_metal_price
+from metals.internal.persistency.queries import insert_metal_prices_batch
 from metals.internal.prices import get_all_metal_prices_in_eur
 
 logger = logging.getLogger(__name__)
@@ -33,10 +33,9 @@ class PriceRefresher:
         try:
             prices = await get_all_metal_prices_in_eur()
 
+            # Store all prices in a single transaction for better performance
             with Session(engine) as session:
-                for metal, price in prices.items():
-                    insert_metal_price(session, metal, price)
-
+                insert_metal_prices_batch(session, prices)
             logger.info("Prices updated successfully and stored in database")
         except Exception as e:
             logger.error(f"Failed to fetch and store prices: {e}")

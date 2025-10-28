@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
 from metals.internal.persistency.models import Holding, MetalPrice, Portfolio
@@ -61,6 +61,31 @@ def insert_metal_price(session: Session, metal: Metal, price: float) -> MetalPri
     return metal_price
 
 
+def insert_metal_prices_batch(
+    session: Session, prices: dict[Metal, float]
+) -> list[MetalPrice]:
+    """
+    Insert multiple metal prices in a single transaction.
+
+    Args:
+        session: Database session
+        prices: Dictionary mapping Metal to price
+
+    Returns:
+        List of inserted MetalPrice records
+    """
+    metal_prices = [
+        MetalPrice(metal=metal, price=price) for metal, price in prices.items()
+    ]
+    session.add_all(metal_prices)
+    session.commit()
+
+    for metal_price in metal_prices:
+        session.refresh(metal_price)
+
+    return metal_prices
+
+
 def get_latest_metal_price(session: Session, metal: Metal) -> MetalPrice | None:
     """Get the latest price for a specific metal."""
     return session.scalars(
@@ -73,16 +98,27 @@ def get_latest_metal_price(session: Session, metal: Metal) -> MetalPrice | None:
 
 def get_latest_metal_prices(session: Session) -> dict[Metal, float]:
     """
-    Get the latest prices for all metals.
-
+    Get the latest prices for all metals in a single query.
     Returns:
         Dictionary mapping Metal to price in EUR
     """
-    prices: dict[Metal, float] = {}
+    # Use a subquery to get the latest created_at for each metal
+    subq = (
+        select(
+            MetalPrice.metal,
+            func.max(MetalPrice.created_at).label("max_created_at"),
+        )
+        .group_by(MetalPrice.metal)
+        .subquery()
+    )
 
-    for metal in Metal:
-        latest_price = get_latest_metal_price(session, metal)
-        if latest_price:
-            prices[metal] = latest_price.price
+    # Join to get the full records with latest created_at
+    stmt = select(MetalPrice).join(
+        subq,
+        (MetalPrice.metal == subq.c.metal)
+        & (MetalPrice.created_at == subq.c.max_created_at),
+    )
 
-    return prices
+    results = session.scalars(stmt).all()
+
+    return {result.metal: result.price for result in results}
