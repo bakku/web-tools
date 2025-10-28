@@ -2,7 +2,7 @@ from typing import Literal
 
 import httpx
 
-from .types import Metal
+from metals.internal.types import Metal
 
 Symbol = Literal["XAU", "XAG"]
 

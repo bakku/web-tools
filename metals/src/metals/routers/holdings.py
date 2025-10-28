@@ -5,17 +5,17 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
-from ..internal.persistency.db import get_session
-from ..internal.persistency.models import Holding
-from ..internal.persistency.queries import (
+from metals.internal.persistency.db import get_session
+from metals.internal.persistency.models import Holding
+from metals.internal.persistency.queries import (
     delete_holding,
     get_holding,
     get_portfolio,
     update_holding,
     update_portfolio,
 )
-from .shared import build_template_context, templates
-from .types import HoldingForm
+from metals.routers.shared import build_template_context, templates
+from metals.routers.types import HoldingForm
 
 router = APIRouter()
 

@@ -5,12 +5,12 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
-from ..internal.persistency.db import get_session
-from ..internal.persistency.models import Portfolio
-from ..internal.persistency.queries import get_portfolio, insert_portfolio
-from ..internal.portfolio_calculations import calculate_portfolio_overview
-from ..internal.price_cache import get_price_cache
-from .shared import build_template_context, templates
+from metals.internal.persistency.db import get_session
+from metals.internal.persistency.models import Portfolio
+from metals.internal.persistency.queries import get_portfolio, insert_portfolio
+from metals.internal.portfolio_calculations import calculate_portfolio_overview
+from metals.internal.price_cache import get_price_cache
+from metals.routers.shared import build_template_context, templates
 
 router = APIRouter()
 

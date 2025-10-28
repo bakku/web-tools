@@ -3,7 +3,7 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
-from .models import Holding, Portfolio
+from metals.internal.persistency.models import Holding, Portfolio
 
 
 def insert_portfolio(session: Session, portfolio: Portfolio) -> Portfolio:

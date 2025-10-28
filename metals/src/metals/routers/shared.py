@@ -3,7 +3,7 @@ from typing import Any
 
 from fastapi.templating import Jinja2Templates
 
-from ..internal.price_cache import PriceFetchError, get_price_cache
+from metals.internal.price_cache import PriceFetchError, get_price_cache
 
 templates = Jinja2Templates(directory="src/metals/templates")
 
