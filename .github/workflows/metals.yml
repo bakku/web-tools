@@ -29,6 +29,10 @@ jobs:
         working-directory: ./metals
         run: uv run mypy .
 
+      - name: Test
+        working-directory: ./metals
+        run: uv run pytest
+
       - name: Lint
         working-directory: ./metals
         run: uv run ruff check
