@@ -52,28 +52,9 @@ def delete_holding(session: Session, holding: Holding) -> None:
     session.commit()
 
 
-def insert_metal_price(session: Session, metal: Metal, price: float) -> MetalPrice:
-    """Insert a new metal price into the database."""
-    metal_price = MetalPrice(metal=metal, price=price)
-    session.add(metal_price)
-    session.commit()
-    session.refresh(metal_price)
-    return metal_price
-
-
 def insert_metal_prices_batch(
     session: Session, prices: dict[Metal, float]
 ) -> list[MetalPrice]:
-    """
-    Insert multiple metal prices in a single transaction.
-
-    Args:
-        session: Database session
-        prices: Dictionary mapping Metal to price
-
-    Returns:
-        List of inserted MetalPrice records
-    """
     metal_prices = [
         MetalPrice(metal=metal, price=price) for metal, price in prices.items()
     ]
@@ -83,23 +64,7 @@ def insert_metal_prices_batch(
     return metal_prices
 
 
-def get_latest_metal_price(session: Session, metal: Metal) -> MetalPrice | None:
-    """Get the latest price for a specific metal."""
-    return session.scalars(
-        select(MetalPrice)
-        .where(MetalPrice.metal == metal)
-        .order_by(MetalPrice.created_at.desc())
-        .limit(1)
-    ).first()
-
-
 def get_latest_metal_prices(session: Session) -> dict[Metal, float]:
-    """
-    Get the latest prices for all metals in a single query.
-    Returns:
-        Dictionary mapping Metal to price in EUR
-    """
-    # Use a subquery to get the latest created_at for each metal
     subq = (
         select(
             MetalPrice.metal,
@@ -109,7 +74,6 @@ def get_latest_metal_prices(session: Session) -> dict[Metal, float]:
         .subquery()
     )
 
-    # Join to get the full records with latest created_at
     stmt = select(MetalPrice).join(
         subq,
         (MetalPrice.metal == subq.c.metal)
