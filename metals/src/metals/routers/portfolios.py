@@ -7,9 +7,12 @@ from sqlalchemy.orm import Session
 
 from metals.internal.persistency.db import get_session
 from metals.internal.persistency.models import Portfolio
-from metals.internal.persistency.queries import get_portfolio, insert_portfolio
+from metals.internal.persistency.queries import (
+    get_latest_metal_prices,
+    get_portfolio,
+    insert_portfolio,
+)
 from metals.internal.portfolio_calculations import calculate_portfolio_overview
-from metals.internal.price_cache import get_price_cache
 from metals.routers.shared import build_template_context, templates
 
 router = APIRouter()
@@ -35,13 +38,12 @@ async def portfolios_show(
     if portfolio is None:
         raise HTTPException(status_code=404)
 
-    try:
-        cache = get_price_cache()
-        current_prices = await cache.get_prices()
-    except Exception as e:
+    current_prices = get_latest_metal_prices(session)
+
+    if not current_prices:
         raise HTTPException(
             status_code=503,
-            detail=f"Unable to fetch current metal prices: {str(e)}",
+            detail="Unable to fetch current metal prices from database",
         )
 
     portfolio_overview = calculate_portfolio_overview(portfolio, current_prices)

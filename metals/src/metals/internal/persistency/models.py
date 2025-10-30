@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Index
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from metals.internal.types import Metal
@@ -9,6 +9,23 @@ from metals.internal.types import Metal
 
 class BaseModel(DeclarativeBase):
     pass
+
+
+class MetalPrice(BaseModel):
+    __tablename__ = "metal_prices"
+
+    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
+    metal: Mapped[Metal]
+    price: Mapped[float]
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(
+        default=datetime.now, onupdate=datetime.now
+    )
+
+    __table_args__ = (
+        # Composite index for efficiently finding latest price per metal
+        Index("ix_metal_prices_metal_created_at", "metal", "created_at"),
+    )
 
 
 class Holding(BaseModel):
