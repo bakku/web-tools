@@ -1,9 +1,10 @@
 import uuid
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
-from metals.internal.persistency.models import Holding, Portfolio
+from metals.internal.persistency.models import Holding, MetalPrice, Portfolio
+from metals.internal.types import Metal
 
 
 def insert_portfolio(session: Session, portfolio: Portfolio) -> Portfolio:
@@ -49,3 +50,36 @@ def update_holding(session: Session, holding: Holding) -> Holding:
 def delete_holding(session: Session, holding: Holding) -> None:
     session.delete(holding)
     session.commit()
+
+
+def insert_metal_prices_batch(
+    session: Session, prices: dict[Metal, float]
+) -> list[MetalPrice]:
+    metal_prices = [
+        MetalPrice(metal=metal, price=price) for metal, price in prices.items()
+    ]
+    session.add_all(metal_prices)
+    session.commit()
+
+    return metal_prices
+
+
+def get_latest_metal_prices(session: Session) -> dict[Metal, float]:
+    subq = (
+        select(
+            MetalPrice.metal,
+            func.max(MetalPrice.created_at).label("max_created_at"),
+        )
+        .group_by(MetalPrice.metal)
+        .subquery()
+    )
+
+    stmt = select(MetalPrice).join(
+        subq,
+        (MetalPrice.metal == subq.c.metal)
+        & (MetalPrice.created_at == subq.c.max_created_at),
+    )
+
+    results = session.scalars(stmt).all()
+
+    return {result.metal: result.price for result in results}

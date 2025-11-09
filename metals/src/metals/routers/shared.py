@@ -2,8 +2,10 @@ import os
 from typing import Any
 
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 
-from metals.internal.price_cache import PriceFetchError, get_price_cache
+from metals.internal.persistency.db import engine
+from metals.internal.persistency.queries import get_latest_metal_prices
 
 templates = Jinja2Templates(directory="src/metals/templates")
 
@@ -26,10 +28,10 @@ async def build_template_context(**kwargs: Any) -> dict[str, Any]:
     context = dict(kwargs)
 
     try:
-        cache = get_price_cache()
-        metal_prices = await cache.get_prices()
-        context["metal_prices"] = metal_prices
-    except PriceFetchError:
+        with Session(engine) as session:
+            metal_prices = get_latest_metal_prices(session)
+        context["metal_prices"] = metal_prices if metal_prices else None
+    except Exception:
         # Prices not available, template will handle missing prices gracefully
         context["metal_prices"] = None
 
