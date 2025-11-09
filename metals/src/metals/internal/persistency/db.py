@@ -4,7 +4,7 @@ from collections.abc import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from metals.routers.shared import is_development_mode
+from metals.env import is_development_mode
 
 engine = create_engine(
     os.getenv("DATABASE_URL", "sqlite:///db/database.db"), echo=is_development_mode()
