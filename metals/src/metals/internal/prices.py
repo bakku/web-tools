@@ -1,10 +1,11 @@
-from typing import Literal
+import asyncio
+import typing
 
 import httpx
 
 from metals.internal.types import Metal
 
-Symbol = Literal["XAU", "XAG"]
+Symbol = typing.Literal["XAU", "XAG"]
 
 GOLD_API_BASE_URL = "https://api.gold-api.com/"
 FRANKFURTER_API_BASE_URL = "https://api.frankfurter.app/"
@@ -43,11 +44,14 @@ async def _get_usd_to_eur_rate() -> float:
 async def get_all_metal_prices_in_eur() -> dict[Metal, float]:
     usd_to_eur = await _get_usd_to_eur_rate()
 
+    # PyTypeChecker incorrectly thinks that list(Metal) returns a list of str
+    # noinspection PyTypeChecker
     metals: list[Metal] = list(Metal)
-    prices: dict[Metal, float] = {}
 
-    for metal in metals:
-        usd_price = await _get_metal_price_in_usd(metal)
-        prices[metal] = usd_price * usd_to_eur
+    coroutines = [_get_metal_price_in_usd(metal) for metal in metals]
 
-    return prices
+    results = await asyncio.gather(*coroutines)
+
+    return {
+        metal: price * usd_to_eur for price, metal in zip(results, metals, strict=True)
+    }
