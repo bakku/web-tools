@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 
 from sqlalchemy import ForeignKey, Index
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -17,9 +17,9 @@ class MetalPrice(BaseModel):
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     metal: Mapped[Metal]
     price: Mapped[float]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now(UTC))
     updated_at: Mapped[datetime] = mapped_column(
-        default=datetime.now, onupdate=datetime.now
+        default=datetime.now(UTC), onupdate=datetime.now(UTC)
     )
 
     __table_args__ = (
@@ -36,9 +36,9 @@ class Holding(BaseModel):
     metal: Mapped[Metal]
     quantity: Mapped[float]
     purchase_price: Mapped[float]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now(UTC))
     updated_at: Mapped[datetime] = mapped_column(
-        default=datetime.now, onupdate=datetime.now
+        default=datetime.now(UTC), onupdate=datetime.now(UTC)
     )
 
     portfolio_id: Mapped[uuid.UUID] = mapped_column(
@@ -51,9 +51,9 @@ class Portfolio(BaseModel):
     __tablename__ = "portfolios"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now(UTC))
     updated_at: Mapped[datetime] = mapped_column(
-        default=datetime.now, onupdate=datetime.now
+        default=datetime.now(UTC), onupdate=datetime.now(UTC)
     )
 
     holdings: Mapped[list[Holding]] = relationship(
