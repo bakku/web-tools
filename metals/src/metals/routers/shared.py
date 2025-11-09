@@ -1,17 +1,13 @@
-import os
 from typing import Any
 
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
+from metals.env import is_development_mode
 from metals.internal.persistency.db import engine
 from metals.internal.persistency.queries import get_latest_metal_prices
 
 templates = Jinja2Templates(directory="src/metals/templates")
-
-
-def is_development_mode() -> bool:
-    return os.getenv("APP_ENV", "").lower() == "development"
 
 
 async def build_template_context(**kwargs: Any) -> dict[str, Any]:
