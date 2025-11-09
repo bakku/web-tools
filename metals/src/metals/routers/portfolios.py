@@ -49,6 +49,6 @@ async def portfolios_show(
     portfolio_overview = calculate_portfolio_overview(portfolio, current_prices)
 
     context = await build_template_context(
-        portfolio_id=portfolio.id, data=portfolio_overview, request=request
+        session, portfolio_id=portfolio.id, data=portfolio_overview, request=request
     )
     return templates.TemplateResponse("portfolios/show.html.jinja2", context)

@@ -21,8 +21,14 @@ router = APIRouter()
 
 
 @router.get("/p/{portfolio_id}/holdings/new")
-async def holdings_new(portfolio_id: uuid.UUID, request: Request) -> HTMLResponse:
-    context = await build_template_context(portfolio_id=portfolio_id, request=request)
+async def holdings_new(
+    portfolio_id: uuid.UUID,
+    request: Request,
+    session: Annotated[Session, Depends(get_session)],
+) -> HTMLResponse:
+    context = await build_template_context(
+        session, portfolio_id=portfolio_id, request=request
+    )
     return templates.TemplateResponse("holdings/new.html.jinja2", context)
 
 
@@ -63,6 +69,7 @@ async def holdings_edit(
         raise HTTPException(status_code=404)
 
     context = await build_template_context(
+        session,
         portfolio_id=portfolio_id,
         holding_id=holding_id,
         holding=holding,
