@@ -92,7 +92,6 @@ def test_portfolios_show_renders_portfolio_table(
     response = client.get(f"/p/{portfolio_id}")
 
     soup = BeautifulSoup(response.text, "html.parser")
-    print(response.text)
 
     assert response.status_code == 200
 

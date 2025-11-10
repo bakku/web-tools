@@ -26,10 +26,8 @@ async def holdings_new(
     request: Request,
     session: Annotated[Session, Depends(get_session)],
 ) -> HTMLResponse:
-    context = await build_template_context(
-        session, portfolio_id=portfolio_id, request=request
-    )
-    return templates.TemplateResponse("holdings/new.html.jinja2", context)
+    context = await build_template_context(session, portfolio_id=portfolio_id)
+    return templates.TemplateResponse(request, "holdings/new.html.jinja2", context)
 
 
 @router.post("/p/{portfolio_id}/holdings")
@@ -73,10 +71,10 @@ async def holdings_edit(
         portfolio_id=portfolio_id,
         holding_id=holding_id,
         holding=holding,
-        request=request,
     )
 
     return templates.TemplateResponse(
+        request,
         "holdings/edit.html.jinja2",
         context,
     )
