@@ -27,13 +27,13 @@ async def portfolios_create(
     return RedirectResponse(f"/p/{portfolio.id}", status_code=303)
 
 
-@router.get("/p/{_id}")
+@router.get("/p/{portfolio_id}")
 async def portfolios_show(
-    _id: uuid.UUID,
+    portfolio_id: uuid.UUID,
     request: Request,
     session: Annotated[Session, Depends(get_session)],
 ) -> HTMLResponse:
-    portfolio = get_portfolio(session, _id)
+    portfolio = get_portfolio(session, portfolio_id)
 
     if portfolio is None:
         raise HTTPException(status_code=404)
