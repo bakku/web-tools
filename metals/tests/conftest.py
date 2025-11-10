@@ -12,7 +12,7 @@ from metals.main import app
 
 
 @pytest.fixture
-def test_db() -> Generator[Session, None, None]:
+def test_session() -> Generator[Session, None, None]:
     engine = create_engine(
         "sqlite:///:memory:",
         connect_args={"check_same_thread": False},
@@ -30,9 +30,9 @@ def test_db() -> Generator[Session, None, None]:
 
 
 @pytest.fixture
-def client(test_db: Session) -> Generator[TestClient, None, None]:
+def client(test_session: Session) -> Generator[TestClient, None, None]:
     def override_get_session() -> Generator[Session, None, None]:
-        yield test_db
+        yield test_session
 
     app.dependency_overrides[get_session] = override_get_session
 

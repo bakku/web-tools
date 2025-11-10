@@ -5,10 +5,10 @@ from metals.internal.persistency.models import MetalPrice
 from metals.internal.types import Metal
 
 
-def test_loads_home_successfully(client: TestClient, test_db: Session) -> None:
-    test_db.add(MetalPrice(metal=Metal.GOLD, price=12.0))
-    test_db.add(MetalPrice(metal=Metal.SILVER, price=10.0))
-    test_db.commit()
+def test_loads_home_successfully(client: TestClient, test_session: Session) -> None:
+    test_session.add(MetalPrice(metal=Metal.GOLD, price=12.0))
+    test_session.add(MetalPrice(metal=Metal.SILVER, price=10.0))
+    test_session.commit()
 
     response = client.get("/")
     content = response.text
