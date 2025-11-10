@@ -4,7 +4,7 @@
 
 This is a **FastAPI web application** for tracking precious metals (Gold and Silver) portfolio performance with real-time pricing. Built with Python 3.14+, SQLAlchemy, and Jinja2 templates.
 
-**Repository:** Monorepo at `/home/bakku/Development/bakku/web-tools` - This project lives in `metals/` subdirectory.
+**Repository:** Monorepo - This project lives in `metals/` subdirectory.
 
 **Tech Stack:** Python 3.14+, FastAPI, SQLAlchemy, Alembic, SQLite, uv package manager, Jinja2, Ruff (linting/formatting), mypy (type checking), pytest
 
