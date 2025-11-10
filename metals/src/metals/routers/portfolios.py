@@ -22,6 +22,15 @@ router = APIRouter()
 async def portfolios_create(
     session: Annotated[Session, Depends(get_session)],
 ) -> RedirectResponse:
+    """
+    Create a new portfolio.
+
+    Args:
+        session: Database session for creating the portfolio.
+
+    Returns:
+        RedirectResponse to the newly created portfolio's detail page.
+    """
     portfolio = insert_portfolio(session, Portfolio())
 
     return RedirectResponse(f"/p/{portfolio.id}", status_code=303)
@@ -33,6 +42,20 @@ async def portfolios_show(
     request: Request,
     session: Annotated[Session, Depends(get_session)],
 ) -> HTMLResponse:
+    """
+    Display a portfolio with all holdings and performance metrics.
+
+    Args:
+        _id: UUID of the portfolio to display.
+        request: The incoming HTTP request.
+        session: Database session for fetching portfolio and prices.
+
+    Returns:
+        HTMLResponse rendering the portfolio detail page.
+
+    Raises:
+        HTTPException: 404 if portfolio not found, 503 if prices unavailable.
+    """
     portfolio = get_portfolio(session, _id)
 
     if portfolio is None:
