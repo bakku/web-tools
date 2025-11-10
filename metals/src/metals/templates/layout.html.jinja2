@@ -40,8 +40,9 @@
     <div class="links"><!-- Will contain links --></div>
     <div class="metal-prices">
         {% if metal_prices %}
-            <span class="price-item">Gold: {{ "%.2f"|format(metal_prices['Gold']) }} €/oz</span>
-            <span class="price-item">Silver: {{ "%.2f"|format(metal_prices['Silver']) }} €/oz</span>
+            {% for metal, price in metal_prices.items() %}
+                <span class="price-item">{{ metal.value }}: {{ "{:.2f}".format(price) }} €</span>
+            {% endfor %}
         {% endif %}
     </div>
 </footer>
