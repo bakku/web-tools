@@ -25,7 +25,7 @@ jobs:
 
       - name: Type check
         working-directory: ./masstimes
-        run: uv run mypy .
+        run: uv run ty check
 
       - name: Lint
         working-directory: ./masstimes

@@ -14,16 +14,12 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "mypy==1.17.1",
     "ruff==0.12.10",
+    "ty==0.0.13",
 ]
 
 [tool.uv]
 required-version = ">=0.9.26"
 
-[tool.mypy]
-strict = true
-mypy_path = "src"
-
 [tool.ruff]
-lint.select = ["E", "F", "I"]
+lint.select = ["E", "F", "I", "ANN"]
