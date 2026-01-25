@@ -3,6 +3,8 @@ import sys
 
 import dotenv
 
+from masstimes.utils import is_test_env
+
 REQUIRED_ENV_VARS = ["ADMIN_USERNAME", "ADMIN_PASSWORD"]
 
 
@@ -21,4 +23,5 @@ def bootstrap() -> None:
     """Prepares the application for startup"""
     dotenv.load_dotenv()
 
-    _check_prerequisites()
+    if not is_test_env():
+        _check_prerequisites()

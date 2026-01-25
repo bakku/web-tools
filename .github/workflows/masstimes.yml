@@ -35,6 +35,10 @@ jobs:
         working-directory: ./masstimes
         run: uv run ruff format --check
 
+      - name: Run tests
+        working-directory: ./masstimes
+        run: uv run pytest
+
   build:
     needs: check
 
