@@ -8,17 +8,21 @@ authors = [
 ]
 requires-python = ">=3.14.2"
 dependencies = [
+    "alembic==1.18.3",
+    "beautifulsoup4==4.14.3",
     "fastapi[standard]==0.128.0",
+    "httpx==0.28.1",
     "jinja2==3.1.6",
+    "mistralai==1.11.1",
     "python-dotenv>=1.2.1",
+    "sqlalchemy==2.0.46",
 ]
 
 [dependency-groups]
 dev = [
-    "httpx==0.28.1",
     "pytest==9.0.2",
-    "ruff==0.12.10",
-    "ty==0.0.13",
+    "ruff==0.14.14",
+    "ty==0.0.14",
 ]
 
 [tool.pytest.ini_options]
@@ -29,3 +33,4 @@ required-version = ">=0.9.26"
 
 [tool.ruff]
 lint.select = ["E", "F", "I", "ANN"]
+exclude = ["alembic"]
