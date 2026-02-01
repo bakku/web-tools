@@ -2,4 +2,8 @@
 
 {% block content %}
     <h4>Admin area</h4>
+
+    <form method="post" action="{{ url_for("admin_post_jobs") }}">
+        <button type="submit">Click</button>
+    </form>
 {% endblock %}

@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -22,6 +23,11 @@ def _check_prerequisites() -> None:
 def bootstrap() -> None:
     """Prepares the application for startup"""
     dotenv.load_dotenv()
+
+    logging.basicConfig(
+        format="%(asctime)s:%(levelname)s:%(name)s:%(message)s",
+        level=os.getenv("LOG_LEVEL", "WARNING").upper(),
+    )
 
     if not is_test_env():
         _check_prerequisites()

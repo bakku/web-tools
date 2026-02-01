@@ -3,3 +3,4 @@
 *.pyc
 .ruff_cache/
 .env
+*.db
