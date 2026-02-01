@@ -22,9 +22,9 @@ async def extract_kreuzberg_masstimes(url: str) -> KreuzbergEvents | None:
             UserMessage(
                 content=[
                     TextChunk(
-                        text='Angefangen ab dem Titel "Gottesdienste", extrahiere für mich '
-                        "alle Termine die in der Kirche stattfinden. Organisiere das"
-                        "Resultat nach den zwei Kirchen (Kreuzberg und St. Paul). "
+                        text='Angefangen ab dem Titel "Gottesdienste", extrahiere für '
+                        "mich alle Termine die in der Kirche stattfinden. Organisiere "
+                        "das Resultat nach den zwei Kirchen (Kreuzberg und St. Paul). "
                         "Für jedes Event möchte ich das Datum, Uhrzeit sowie die"
                         "Beschreibung."
                     ),

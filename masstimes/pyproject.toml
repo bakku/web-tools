@@ -33,3 +33,4 @@ required-version = ">=0.9.26"
 
 [tool.ruff]
 lint.select = ["E", "F", "I", "ANN"]
+exclude = ["alembic"]
