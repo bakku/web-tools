@@ -15,5 +15,15 @@ async def home_index(
     request: Request,
     session: Annotated[Session, Depends(get_session)],
 ) -> HTMLResponse:
+    """
+    Render the home page.
+
+    Args:
+        request: The incoming HTTP request.
+        session: Database session for fetching metal prices.
+
+    Returns:
+        HTMLResponse rendering the home page template.
+    """
     context = await build_template_context(session)
     return templates.TemplateResponse(request, "home/index.html.jinja2", context)

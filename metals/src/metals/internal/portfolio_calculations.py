@@ -5,6 +5,16 @@ from metals.internal.types import HoldingOverview, Metal, PortfolioOverview
 def _calculate_holding_overview(
     holding: Holding, current_price: float
 ) -> HoldingOverview:
+    """
+    Calculate performance metrics for a single holding.
+
+    Args:
+        holding: The holding to calculate metrics for.
+        current_price: The current market price of the metal in EUR per troy ounce.
+
+    Returns:
+        HoldingOverview containing purchase cost, current value, and gain metrics.
+    """
     purchase_cost = holding.quantity * holding.purchase_price
     current_value = holding.quantity * current_price
     absolute_gain = current_value - purchase_cost
@@ -26,6 +36,20 @@ def _calculate_holding_overview(
 def calculate_portfolio_overview(
     portfolio: Portfolio, current_prices: dict[Metal, float]
 ) -> PortfolioOverview:
+    """
+    Calculate performance metrics for an entire portfolio.
+
+    Calculates individual holding metrics and aggregates them to provide
+    total portfolio value, cost, and gain metrics.
+
+    Args:
+        portfolio: The portfolio to calculate metrics for.
+        current_prices: Dictionary mapping each Metal to its current price in EUR.
+
+    Returns:
+        PortfolioOverview containing all holdings with their metrics and
+        aggregated portfolio totals.
+    """
     holdings = [
         _calculate_holding_overview(holding, current_prices[holding.metal])
         for holding in portfolio.holdings

@@ -26,6 +26,17 @@ async def holdings_new(
     request: Request,
     session: Annotated[Session, Depends(get_session)],
 ) -> HTMLResponse:
+    """
+    Display the form for creating a new holding in a portfolio.
+
+    Args:
+        portfolio_id: UUID of the portfolio to add the holding to.
+        request: The incoming HTTP request.
+        session: Database session for fetching metal prices.
+
+    Returns:
+        HTMLResponse rendering the new holding form.
+    """
     context = await build_template_context(session, portfolio_id=portfolio_id)
     return templates.TemplateResponse(request, "holdings/new.html.jinja2", context)
 
@@ -36,6 +47,21 @@ async def holdings_create(
     data: Annotated[HoldingForm, Form()],
     session: Annotated[Session, Depends(get_session)],
 ) -> RedirectResponse:
+    """
+    Create a new holding in a portfolio.
+
+    Args:
+        portfolio_id: UUID of the portfolio to add the holding to.
+        data: Form data containing holding details (description, metal,
+            quantity, price).
+        session: Database session for creating the holding.
+
+    Returns:
+        RedirectResponse to the portfolio detail page.
+
+    Raises:
+        HTTPException: 404 if portfolio not found.
+    """
     holding = Holding(
         description=data.description,
         metal=data.metal,
@@ -61,6 +87,21 @@ async def holdings_edit(
     request: Request,
     session: Annotated[Session, Depends(get_session)],
 ) -> HTMLResponse:
+    """
+    Display the form for editing an existing holding.
+
+    Args:
+        portfolio_id: UUID of the portfolio containing the holding.
+        holding_id: UUID of the holding to edit.
+        request: The incoming HTTP request.
+        session: Database session for fetching the holding.
+
+    Returns:
+        HTMLResponse rendering the edit holding form.
+
+    Raises:
+        HTTPException: 404 if holding not found.
+    """
     holding = get_holding(session, portfolio_id, holding_id)
 
     if holding is None:
@@ -87,6 +128,22 @@ async def holdings_update(
     data: Annotated[HoldingForm, Form()],
     session: Annotated[Session, Depends(get_session)],
 ) -> RedirectResponse:
+    """
+    Update an existing holding.
+
+    Args:
+        portfolio_id: UUID of the portfolio containing the holding.
+        holding_id: UUID of the holding to update.
+        data: Form data with updated holding details (description, metal,
+            quantity, price).
+        session: Database session for updating the holding.
+
+    Returns:
+        RedirectResponse to the portfolio detail page.
+
+    Raises:
+        HTTPException: 404 if holding not found.
+    """
     holding = get_holding(session, portfolio_id, holding_id)
 
     if holding is None:
@@ -108,6 +165,20 @@ async def holdings_delete(
     holding_id: uuid.UUID,
     session: Annotated[Session, Depends(get_session)],
 ) -> RedirectResponse:
+    """
+    Delete a holding from a portfolio.
+
+    Args:
+        portfolio_id: UUID of the portfolio containing the holding.
+        holding_id: UUID of the holding to delete.
+        session: Database session for deleting the holding.
+
+    Returns:
+        RedirectResponse to the portfolio detail page.
+
+    Raises:
+        HTTPException: 404 if holding not found.
+    """
     holding = get_holding(session, portfolio_id, holding_id)
 
     if holding is None:
